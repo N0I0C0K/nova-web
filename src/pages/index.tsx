@@ -16,9 +16,15 @@ function MainInfo() {
     >
       <NovaText />
       <Text className={inter.className}>热爱游戏的年轻人</Text>
-      <Link href={'/join'}>Join us</Link>
+      <Link href={'/join'} color={'blue.600'}>
+        Join us
+      </Link>
     </Flex>
   )
+}
+
+function RecentEvent() {
+  return <></>
 }
 
 export default function Home() {
