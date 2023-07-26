@@ -18,14 +18,21 @@ function TopHeader() {
   return (
     <Flex
       className="items-center backdrop-blur-md"
-      gap={10}
-      py={3}
-      px={10}
+      gap={'2rem'}
+      py={'2rem'}
+      px={'5rem'}
       position={'fixed'}
       w={'100vw'}
       h={'4em'}
     >
-      <NovaNmal />
+      <Text
+        fontSize="4xl"
+        fontWeight="extrabold"
+        pb={'1rem'}
+        className="self-center cursor-pointer"
+      >
+        Nova
+      </Text>
       <Link href="/">Home</Link>
       <Link href="/game">Games</Link>
       <Link href="/blog">Blog</Link>
@@ -42,7 +49,7 @@ export function ButtomFooter() {
       className="border items-center"
       gap={10}
       py={3}
-      px={10}
+      px={'5rem'}
       w={'100vw'}
       h={'10em'}
     >
@@ -70,7 +77,7 @@ export default function BaseLayout({
   return (
     <Box>
       <TopHeader />
-      <Box>{children}</Box>
+      <Box minH={'100vh'}>{children}</Box>
       <ButtomFooter />
     </Box>
   )

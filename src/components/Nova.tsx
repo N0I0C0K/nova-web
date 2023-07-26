@@ -16,9 +16,9 @@ export const NovaText = () => {
 export function NovaNmal() {
   return (
     <Text
-      fontSize='4xl'
-      fontWeight='extrabold'
-      className='self-end cursor-pointer'
+      fontSize="4xl"
+      fontWeight="extrabold"
+      className="self-end cursor-pointer"
     >
       Nova
     </Text>
