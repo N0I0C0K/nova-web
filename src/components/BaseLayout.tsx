@@ -13,8 +13,47 @@ import {
 import { Link } from '@chakra-ui/next-js'
 import { TopSearch } from './TopSearch'
 import { NovaNmal, NovaText } from './Nova'
+import { useRouter } from 'next/router'
+import { FC, useMemo } from 'react'
+
+const SelectLink: FC<{
+  href: string
+  name: string
+  selectd: boolean
+}> = ({ href, name, selectd }) => {
+  return (
+    <Link href={href}>
+      <Text color={selectd ? 'black' : 'gray.400'}>{name}</Text>
+    </Link>
+  )
+}
+
+const LinkList: {
+  path: string
+  name: string
+}[] = [
+  {
+    path: '/',
+    name: 'Home',
+  },
+  {
+    path: '/game',
+    name: 'Game',
+  },
+  {
+    path: '/blog',
+    name: 'Blog',
+  },
+  {
+    path: '/about',
+    name: 'About',
+  },
+]
 
 function TopHeader() {
+  const router = useRouter()
+  console.log(router)
+
   return (
     <Flex
       className="items-center backdrop-blur-md"
@@ -33,10 +72,20 @@ function TopHeader() {
       >
         Nova
       </Text>
-      <Link href="/">Home</Link>
+      {LinkList.map((val, idx) => {
+        return (
+          <SelectLink
+            href={val.path}
+            name={val.name}
+            selectd={router.pathname.startsWith(val.path)}
+            key={idx}
+          />
+        )
+      })}
+      {/* <SelectLink href="/" name="Home" selectd={false} />
       <Link href="/game">Games</Link>
       <Link href="/blog">Blog</Link>
-      <Link href="/about">About</Link>
+      <Link href="/about">About</Link> */}
       <Spacer />
       <TopSearch className="max-w-xs" />
     </Flex>
@@ -77,7 +126,9 @@ export default function BaseLayout({
   return (
     <Box>
       <TopHeader />
-      <Box minH={'100vh'}>{children}</Box>
+      <Box minH={'100vh'} px={'5rem'}>
+        {children}
+      </Box>
       <ButtomFooter />
     </Box>
   )
