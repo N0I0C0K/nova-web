@@ -15,7 +15,7 @@ function MainInfo() {
       minH={'100vh'}
     >
       <NovaText />
-      <Text className={inter.className}>热爱游戏的年轻人</Text>
+      <Text className=''>热爱游戏的年轻人</Text>
       <Link href={'/join'} color={'blue.600'}>
         Join us
       </Link>

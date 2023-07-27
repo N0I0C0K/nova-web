@@ -7,6 +7,7 @@ export const NovaText = () => {
       bgClip='text'
       fontSize='8xl'
       fontWeight='extrabold'
+      className='nova'
     >
       Nova
     </Text>
@@ -16,9 +17,9 @@ export const NovaText = () => {
 export function NovaNmal() {
   return (
     <Text
-      fontSize="4xl"
-      fontWeight="extrabold"
-      className="self-end cursor-pointer"
+      fontSize='4xl'
+      fontWeight='extrabold'
+      className='self-end cursor-pointer'
     >
       Nova
     </Text>
