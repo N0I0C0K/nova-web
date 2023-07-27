@@ -1,5 +1,13 @@
 import { ArticleProps } from '@/types'
-import { Box, Flex, Heading, List, ListItem, Text } from '@chakra-ui/react'
+import {
+  Badge,
+  Box,
+  Flex,
+  Heading,
+  List,
+  ListItem,
+  Text,
+} from '@chakra-ui/react'
 import { GetServerSideProps } from 'next/types'
 
 export const getServerSideProps: GetServerSideProps<{
@@ -31,19 +39,41 @@ export const getServerSideProps: GetServerSideProps<{
 
 export default function BlogPage({ articles }: { articles: ArticleProps[] }) {
   return (
-    <Flex pt={'6rem'} flexDirection={'column'} className="items-center">
+    <Flex pt={'6rem'} flexDirection={'column'} className='items-center'>
       <Heading>Blog</Heading>
       <List pt={'3rem'} spacing={'1rem'}>
         {articles.map((it, idx) => {
           return (
             <ListItem key={idx}>
               <Box
-                className="rounded-lg p-10 shadow-md cursor-pointer duration-300 hover:shadow-lg hover:scale-105"
+                className='rounded-lg p-10 shadow-md cursor-pointer duration-300 hover:shadow-lg hover:scale-105'
                 minW={'50rem'}
-                bgColor={'gray.50'}
+                sx={{
+                  _light: {
+                    bg: 'gray.50',
+                  },
+                  _dark: {
+                    bg: 'gray.700',
+                  },
+                }}
               >
                 <Heading fontSize={'lg'}>{it.title}</Heading>
                 <Text color={'gray.400'}>{it.synopsis}</Text>
+                {it.badges && (
+                  <Flex gap={'.5rem'} mt={'1rem'}>
+                    {it.badges.map((badge, idx) => {
+                      return (
+                        <Badge
+                          key={idx}
+                          colorScheme={'green'}
+                          variant={'subtle'}
+                        >
+                          {badge}
+                        </Badge>
+                      )
+                    })}
+                  </Flex>
+                )}
               </Box>
             </ListItem>
           )

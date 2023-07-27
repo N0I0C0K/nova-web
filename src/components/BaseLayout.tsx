@@ -24,7 +24,18 @@ const SelectLink: FC<{
 }> = ({ href, name, selectd }) => {
   return (
     <Link href={href}>
-      <Text color={selectd ? 'black' : 'gray.400'}>{name}</Text>
+      <Text
+        sx={{
+          _light: {
+            color: selectd ? 'black' : 'gray.400',
+          },
+          _dark: {
+            color: selectd ? 'white' : 'gray.400',
+          },
+        }}
+      >
+        {name}
+      </Text>
     </Link>
   )
 }
@@ -53,6 +64,9 @@ const LinkList: {
 
 function TopHeader() {
   const router = useRouter()
+  const pathname = useMemo(() => {
+    return router.pathname
+  }, [router])
   console.log(router)
 
   return (
@@ -78,15 +92,15 @@ function TopHeader() {
           <SelectLink
             href={val.path}
             name={val.name}
-            selectd={router.pathname.startsWith(val.path)}
+            selectd={
+              val.path.length > 1
+                ? pathname.startsWith(val.path)
+                : pathname === val.path
+            }
             key={idx}
           />
         )
       })}
-      {/* <SelectLink href="/" name="Home" selectd={false} />
-      <Link href="/game">Games</Link>
-      <Link href="/blog">Blog</Link>
-      <Link href="/about">About</Link> */}
       <Spacer />
       <Flex gap={1}>
         <TopSearch className='max-w-xs' />
