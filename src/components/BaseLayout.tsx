@@ -67,11 +67,9 @@ function TopHeader() {
   const pathname = useMemo(() => {
     return router.pathname
   }, [router])
-  console.log(router)
-
   return (
     <Flex
-      className='items-center backdrop-blur-md'
+      className='items-center backdrop-blur-md z-50'
       gap={'2rem'}
       py={'2rem'}
       px={'5rem'}

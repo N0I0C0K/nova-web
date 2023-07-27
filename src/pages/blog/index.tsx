@@ -1,4 +1,5 @@
 import { ArticleProps } from '@/types'
+import { Link } from '@chakra-ui/next-js'
 import {
   Badge,
   Box,
@@ -46,7 +47,7 @@ export default function BlogPage({ articles }: { articles: ArticleProps[] }) {
           return (
             <ListItem key={idx}>
               <Box
-                className='rounded-lg p-10 shadow-md cursor-pointer duration-300 hover:shadow-lg hover:scale-105'
+                className='rounded-lg p-10 shadow-md duration-300 hover:shadow-lg hover:scale-105'
                 minW={'50rem'}
                 sx={{
                   _light: {
@@ -57,7 +58,9 @@ export default function BlogPage({ articles }: { articles: ArticleProps[] }) {
                   },
                 }}
               >
-                <Heading fontSize={'lg'}>{it.title}</Heading>
+                <Link href={`/blog/${it.id}`}>
+                  <Heading fontSize={'lg'}>{it.title}</Heading>
+                </Link>
                 <Text color={'gray.400'}>{it.synopsis}</Text>
                 {it.badges && (
                   <Flex gap={'.5rem'} mt={'1rem'}>
