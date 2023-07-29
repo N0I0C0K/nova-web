@@ -8,6 +8,16 @@ export const NovaText = () => {
       fontSize='8xl'
       fontWeight='extrabold'
       className='nova'
+      sx={{
+        position: 'relative',
+        _after: {
+          content: '"Nova"',
+          position: 'absolute',
+          top: '0',
+          left: '0',
+          textShadow: '0px 0px 80px rgba(255, 0, 130, 0.7)',
+        },
+      }}
     >
       Nova
     </Text>
