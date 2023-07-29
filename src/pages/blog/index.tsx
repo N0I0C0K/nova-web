@@ -40,7 +40,7 @@ export const getServerSideProps: GetServerSideProps<{
 
 export default function BlogPage({ articles }: { articles: ArticleProps[] }) {
   return (
-    <Flex pt={'6rem'} flexDirection={'column'} className='items-center'>
+    <Flex pt={'5rem'} flexDirection={'column'} className='items-center'>
       <Heading>Blog</Heading>
       <List pt={'3rem'} spacing={'1rem'}>
         {articles.map((it, idx) => {

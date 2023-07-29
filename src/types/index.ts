@@ -5,3 +5,11 @@ export interface ArticleProps {
   imageUrl?: string
   badges?: string[]
 }
+
+export interface MemberProps {
+  id: string
+  name: string
+  avatarUrl?: string
+  role: string
+  description: string
+}

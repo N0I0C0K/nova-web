@@ -60,6 +60,10 @@ const LinkList: {
     path: '/about',
     name: 'About',
   },
+  {
+    path: '/member',
+    name: 'Member',
+  },
 ]
 
 function TopHeader() {
@@ -69,7 +73,7 @@ function TopHeader() {
   }, [router])
   return (
     <Flex
-      className="items-center backdrop-blur-md z-50"
+      className='items-center backdrop-blur-md z-50'
       gap={'2rem'}
       py={'2rem'}
       px={'5rem'}
@@ -78,10 +82,10 @@ function TopHeader() {
       h={'4em'}
     >
       <Text
-        fontSize="4xl"
-        fontWeight="extrabold"
+        fontSize='4xl'
+        fontWeight='extrabold'
         pb={'1rem'}
-        className="self-center cursor-pointer"
+        className='self-center cursor-pointer'
       >
         Nova
       </Text>
@@ -101,7 +105,7 @@ function TopHeader() {
       })}
       <Spacer />
       <Flex gap={1}>
-        <TopSearch className="max-w-xs" />
+        <TopSearch className='max-w-xs' />
         <ColorModeToggle />
       </Flex>
     </Flex>
@@ -111,29 +115,29 @@ function TopHeader() {
 export function ButtomFooter() {
   return (
     <Flex
-      className="border-t items-center"
+      className='border-t items-center'
       gap={10}
       py={3}
       px={'5rem'}
       w={'100%'}
       h={'10em'}
     >
-      <Flex flexDirection={'column'} className="items-start justify-center">
-        <Text fontSize="2xl" fontWeight="extrabold" className="cursor-pointer">
+      <Flex flexDirection={'column'} className='items-start justify-center'>
+        <Text fontSize='2xl' fontWeight='extrabold' className='cursor-pointer'>
           Nova
         </Text>
-        <Text fontSize={'sm'} color="gray.400">
+        <Text fontSize={'sm'} color='gray.400'>
           Nova独立游戏研究社团
         </Text>
-        <Text fontSize={'sm'} color="gray.400">
+        <Text fontSize={'sm'} color='gray.400'>
           依托于陕西科技大学
         </Text>
       </Flex>
       <Spacer />
-      <Link href="/">Home</Link>
-      <Link href="/game">Games</Link>
-      <Link href="/about">About</Link>
-      <Link href="nick131410@aliyun.com">Contact Us</Link>
+      <Link href='/'>Home</Link>
+      <Link href='/game'>Games</Link>
+      <Link href='/about'>About</Link>
+      <Link href='nick131410@aliyun.com'>Contact Us</Link>
     </Flex>
   )
 }
