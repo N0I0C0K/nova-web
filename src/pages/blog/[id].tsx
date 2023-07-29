@@ -31,6 +31,7 @@ export const getServerSideProps: GetServerSideProps<
         title: ' Test Title',
         synopsis: 'test synopsis',
         badges: ['badge1', 'badge2'],
+        author: 'nick',
       },
     },
   }
