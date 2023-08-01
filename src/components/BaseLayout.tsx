@@ -85,6 +85,7 @@ function TopHeader() {
         fontSize='4xl'
         fontWeight='extrabold'
         pb={'1rem'}
+        mr={'1rem'}
         className='self-center cursor-pointer'
       >
         Nova
