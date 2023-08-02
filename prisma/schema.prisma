@@ -27,7 +27,7 @@ model Post {
 
 model User{
   id String @id @map("_id") @default(auto()) @db.ObjectId
-  name String
+  name String @unique
   role String
   description String
   avatarUrl String?

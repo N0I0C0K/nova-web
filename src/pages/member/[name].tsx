@@ -1,4 +1,5 @@
 import { BlogItem } from '@/components/BlogItem'
+import { prisma } from '@/db'
 import { MemberProps, ArticleProps } from '@/types'
 import { Avatar, Flex, Heading, Text } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
@@ -11,7 +12,7 @@ const MemberSpace: React.FC<{
     <Flex pt={'5rem'} flexDirection={'column'} className='items-center'>
       <Avatar
         name={member.name}
-        src={member.avatarUrl}
+        src={member.avatarUrl ?? ''}
         size={'2xl'}
         pb={'1rem'}
       />
@@ -35,31 +36,25 @@ export const getServerSideProps: GetServerSideProps<
   { name: string }
 > = async (ctx) => {
   const { name } = ctx.params!
+  const member = await prisma.user.findFirst({
+    where: {
+      name: name,
+    },
+  })
+  if (!member) {
+    return {
+      notFound: true,
+    }
+  }
+  const articles = await prisma.post.findMany({
+    where: {
+      user_id: member.id,
+    },
+  })
   return {
     props: {
-      member: {
-        id: 'member1',
-        name: name,
-        avatarUrl: 'https://i.pravatar.cc/300',
-        description: 'test description',
-        role: 'test role',
-      },
-      memberArticles: [
-        {
-          id: 'article1',
-          title: ' Test Title',
-          synopsis: 'test synopsis',
-          badges: ['badge1', 'badge2'],
-          author: name,
-        },
-        {
-          id: 'article2',
-          title: ' Test Title',
-          synopsis: 'test synopsis',
-          badges: ['badge1', 'badge2'],
-          author: name,
-        },
-      ],
+      member,
+      memberArticles: articles,
     },
   }
 }
