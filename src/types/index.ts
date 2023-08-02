@@ -3,7 +3,6 @@ export interface ArticleProps {
   title: string
   author: string
   synopsis: string
-  imageUrl?: string
   badges?: string[]
   createAt?: string
   updateAt?: string
