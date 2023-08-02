@@ -10,6 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Comment{
+  id String @id @map("_id") @default(auto()) @db.ObjectId
+  content String
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  user_id String @db.ObjectId
+
+  post_id String @db.ObjectId
+  post Post @relation(fields: [post_id], references: [id])
+}
+
 model Post {
   id String @id @map("_id") @default(auto()) @db.ObjectId
   slug String @unique @default(cuid())
@@ -22,6 +34,8 @@ model Post {
 
   user_id String @db.ObjectId
   author User @relation(fields: [user_id], references: [id])
+
+  comments Comment[]
 }
 
 
@@ -32,4 +46,14 @@ model User{
   description String
   avatarUrl String?
   posts Post[]
+}
+
+model JoinForm{
+  id String @id @map("_id") @default(auto()) @db.ObjectId
+  name String
+  email String
+  phone String
+  introduction String
+
+  createAt DateTime @default(now())
 }
