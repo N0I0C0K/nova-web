@@ -1,3 +1,4 @@
+import { prisma } from '@/db'
 import { MemberProps } from '@/types'
 import { Link } from '@chakra-ui/next-js'
 import { Avatar, Box, Flex, Heading, Text } from '@chakra-ui/react'
@@ -51,17 +52,15 @@ const MemberPage: React.FC<{
 export const getServerSideProps: GetServerSideProps<{
   members: MemberProps[]
 }> = async (ctx) => {
+  const users = await prisma.user.findMany()
   return {
     props: {
-      members: [
-        {
-          id: 'member1',
-          name: 'Test Name',
-          avatarUrl: 'https://i.pravatar.cc/300',
-          description: 'test description',
-          role: 'test role',
-        },
-      ],
+      members: users.map((val) => ({
+        id: val.id,
+        name: val.name,
+        description: val.description,
+        role: val.role,
+      })),
     },
   }
 }
