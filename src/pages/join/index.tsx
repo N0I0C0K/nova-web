@@ -6,6 +6,7 @@ import {
   FormLabel,
   Heading,
   Input,
+  Textarea,
 } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
 import { Formik, Form, Field } from 'formik'
@@ -40,9 +41,19 @@ const JoinPage = () => {
         initialValues={{
           name: '',
           email: '',
+          phone: '',
+          introduction: '',
         }}
         onSubmit={(val) => {
           console.log(val)
+
+          fetch('/api/form/join', {
+            method: 'POST',
+            body: JSON.stringify(val),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
         }}
       >
         <Form
@@ -64,6 +75,22 @@ const JoinPage = () => {
               <FormControl>
                 <FormLabel>Email:</FormLabel>
                 <Input {...field} />
+              </FormControl>
+            )}
+          </Field>
+          <Field name='phone'>
+            {({ field }: { field: any }) => (
+              <FormControl>
+                <FormLabel>Phone:</FormLabel>
+                <Input type='number' {...field} />
+              </FormControl>
+            )}
+          </Field>
+          <Field name='introduction'>
+            {({ field }: { field: any }) => (
+              <FormControl>
+                <FormLabel>introduction:</FormLabel>
+                <Textarea {...field} placeholder='why you love game?' />
               </FormControl>
             )}
           </Field>
