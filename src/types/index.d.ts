@@ -1,4 +1,4 @@
-import type { User, Post, Comment, PostContent } from '@prisma/client'
+import type { User, Post, Comment, PostContent, JoinForm } from '@prisma/client'
 
 export type ArticleProps = Post & {}
 
