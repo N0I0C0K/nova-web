@@ -1,5 +1,6 @@
 import { BlogItem } from '@/components/BlogItem'
-import { ArticleProps } from '@/types'
+import { prisma } from '@/db'
+import { ArticleProps, MemberProps } from '@/types'
 import { Link } from '@chakra-ui/next-js'
 import {
   Badge,
@@ -12,37 +13,9 @@ import {
 } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next/types'
 
-export const getServerSideProps: GetServerSideProps<{
-  articles: ArticleProps[]
-}> = async (ctx) => {
-  return {
-    props: {
-      articles: [
-        {
-          id: 'article1',
-          title: 'Test Title1',
-          synopsis: 'this is a test synopsis!!!!!!',
-          author: 'nick',
-        },
-        {
-          id: 'article2',
-          title: 'Test Title2cakjsdkas',
-          synopsis: 'this is a test synopsis!!!!!!',
-          author: 'nick',
-        },
-        {
-          id: 'article3',
-          title: 'Test Title3',
-          synopsis: 'this is a test synopsis!!!!!!\ndadadas',
-          badges: ['badge1', 'badge2'],
-          author: 'nick',
-        },
-      ],
-    },
-  }
-}
+type BlogProps = { author: MemberProps } & ArticleProps
 
-export default function BlogPage({ articles }: { articles: ArticleProps[] }) {
+export default function BlogPage({ articles }: { articles: BlogProps[] }) {
   return (
     <Flex pt={'5rem'} flexDirection={'column'} className='items-center'>
       <Heading>Blog</Heading>
@@ -50,11 +23,35 @@ export default function BlogPage({ articles }: { articles: ArticleProps[] }) {
         {articles.map((it, idx) => {
           return (
             <ListItem key={idx}>
-              <BlogItem article={it} />
+              <BlogItem
+                authorName={it.author.name}
+                id={it.slug}
+                synopsis={it.synopsis}
+                title={it.title}
+                badges={it.badges}
+              />
             </ListItem>
           )
         })}
       </List>
     </Flex>
   )
+}
+
+export const getServerSideProps: GetServerSideProps<{
+  articles: (ArticleProps & {
+    author: MemberProps
+  })[]
+}> = async (ctx) => {
+  const allArticle = await prisma.post.findMany({
+    take: 10,
+    include: {
+      author: true,
+    },
+  })
+  return {
+    props: {
+      articles: allArticle,
+    },
+  }
 }

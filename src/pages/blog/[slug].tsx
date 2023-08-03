@@ -1,4 +1,4 @@
-import { ArticleProps } from '@/types'
+import { ArticleContentProps, ArticleProps } from '@/types'
 import { Box, Flex, Heading } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
 import { FC } from 'react'
@@ -6,20 +6,20 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import fs from 'fs'
 import CustomRenderer from '@/components/markdown/CustomRenderer'
+import { prisma } from '@/db'
 
 const ArticlePage: FC<{
-  article: ArticleProps
-  content: string
-}> = ({ article, content }) => {
+  post: ArticleContentProps
+}> = ({ post }) => {
   return (
     <Flex pt={'5rem'} flexDirection={'column'} className='items-center'>
       <Box w={'50vw'}>
-        <Heading>{article.title}</Heading>
+        <Heading>{post.title}</Heading>
         <ReactMarkdown
           components={CustomRenderer()}
           remarkPlugins={[remarkGfm]}
         >
-          {content}
+          {post.content.content}
         </ReactMarkdown>
       </Box>
     </Flex>
@@ -28,25 +28,31 @@ const ArticlePage: FC<{
 
 export const getServerSideProps: GetServerSideProps<
   {
-    article: ArticleProps
-    content: string
+    post: ArticleContentProps
   },
   {
-    id: string
+    slug: string
   }
 > = async (ctx) => {
-  const { id } = ctx.params!
-  const fileContent = fs.readFileSync('./README.md', 'utf-8')
+  const { slug } = ctx.params!
+  const post = await prisma.post.findFirst({
+    where: {
+      slug: slug,
+    },
+    include: {
+      author: true,
+      content: true,
+      comments: true,
+    },
+  })
+  if (!post) {
+    return {
+      notFound: true,
+    }
+  }
   return {
     props: {
-      article: {
-        id,
-        title: ' Test Title',
-        synopsis: 'test synopsis',
-        badges: ['badge1', 'badge2'],
-        author: 'nick',
-      },
-      content: fileContent,
+      post,
     },
   }
 }

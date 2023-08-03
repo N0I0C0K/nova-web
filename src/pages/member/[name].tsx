@@ -5,9 +5,8 @@ import { Avatar, Flex, Heading, Text } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
 
 const MemberSpace: React.FC<{
-  member: MemberProps
-  memberArticles: ArticleProps[]
-}> = ({ member, memberArticles }) => {
+  member: MemberProps & { posts: ArticleProps[] }
+}> = ({ member }) => {
   return (
     <Flex pt={'5rem'} flexDirection={'column'} className='items-center'>
       <Avatar
@@ -20,8 +19,15 @@ const MemberSpace: React.FC<{
       <Text color={'gray.400'}>{member.description}</Text>
 
       <Flex flexDirection={'column'} pt={'1rem'} gap={'1rem'}>
-        {memberArticles.map((article) => (
-          <BlogItem article={article} key={article.id} />
+        {member.posts.map((it) => (
+          <BlogItem
+            authorName={member.name}
+            id={it.slug}
+            synopsis={it.synopsis}
+            title={it.title}
+            badges={it.badges}
+            key={it.slug}
+          />
         ))}
       </Flex>
     </Flex>
@@ -30,8 +36,7 @@ const MemberSpace: React.FC<{
 
 export const getServerSideProps: GetServerSideProps<
   {
-    member: MemberProps
-    memberArticles: ArticleProps[]
+    member: MemberProps & { posts: ArticleProps[] }
   },
   { name: string }
 > = async (ctx) => {
@@ -40,21 +45,18 @@ export const getServerSideProps: GetServerSideProps<
     where: {
       name: name,
     },
+    include: {
+      posts: true,
+    },
   })
   if (!member) {
     return {
       notFound: true,
     }
   }
-  const articles = await prisma.post.findMany({
-    where: {
-      user_id: member.id,
-    },
-  })
   return {
     props: {
       member,
-      memberArticles: articles,
     },
   }
 }
