@@ -139,6 +139,9 @@ export function ButtomFooter() {
       <Link href='/game'>Games</Link>
       <Link href='/about'>About</Link>
       <Link href='nick131410@aliyun.com'>Contact Us</Link>
+      <Link href='/login' color={'blue.300'}>
+        Login
+      </Link>
     </Flex>
   )
 }

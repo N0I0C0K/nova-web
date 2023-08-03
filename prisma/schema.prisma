@@ -14,12 +14,9 @@ model Comment {
   id       String   @id @default(auto()) @map("_id") @db.ObjectId
   content  String
   createAt DateTime @default(now())
-  updateAt DateTime @updatedAt
-
-  user_id String @db.ObjectId
-
-  post_id String @db.ObjectId
-  post    Post   @relation(fields: [post_id], references: [id])
+  user_id  String   @db.ObjectId
+  post_id  String   @db.ObjectId
+  post     Post     @relation(fields: [post_id], references: [id])
 }
 
 model Post {
@@ -46,12 +43,22 @@ model PostContent {
 }
 
 model User {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  name        String  @unique
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   @unique
   role        String
   description String
   avatarUrl   String?
   posts       Post[]
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
+}
+
+model UserSecure {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  username String   @unique
+  password String
+  salt     String
+  updateAt DateTime @updatedAt
 }
 
 model JoinForm {

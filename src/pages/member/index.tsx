@@ -20,7 +20,11 @@ const MemberCard: React.FC<MemberProps> = (member) => {
         },
       }}
     >
-      <Avatar name={member.name} src={member.avatarUrl ?? ''} size={'lg'} />
+      <Avatar
+        name={member.name}
+        src={member.avatarUrl ?? `https://i.pravatar.cc/300?id=${member.name}`}
+        size={'lg'}
+      />
       <Flex flexDir={'column'}>
         <Link href={`/member/${member.name}`}>
           <Text fontSize={'2xl'}>{member.name}</Text>
@@ -55,13 +59,7 @@ export const getServerSideProps: GetServerSideProps<{
   const users = await prisma.user.findMany()
   return {
     props: {
-      members: users.map((val) => ({
-        id: val.id,
-        name: val.name,
-        description: val.description,
-        role: val.role,
-        avatarUrl: `https://i.pravatar.cc/300?id=${val.id}`,
-      })),
+      members: users,
     },
   }
 }
