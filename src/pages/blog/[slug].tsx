@@ -1,10 +1,16 @@
-import { ArticleContentProps, ArticleProps } from '@/types'
-import { Box, Flex, Heading } from '@chakra-ui/react'
+import { ArticleContentProps } from '@/types'
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  InputGroup,
+  Textarea,
+} from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
 import { FC } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import fs from 'fs'
 import CustomRenderer from '@/components/markdown/CustomRenderer'
 import { prisma } from '@/db'
 
@@ -13,15 +19,33 @@ const ArticlePage: FC<{
 }> = ({ post }) => {
   return (
     <Flex pt={'5rem'} flexDirection={'column'} className='items-center'>
-      <Box w={'50vw'}>
-        <Heading>{post.title}</Heading>
-        <ReactMarkdown
-          components={CustomRenderer()}
-          remarkPlugins={[remarkGfm]}
-        >
-          {post.content.content}
-        </ReactMarkdown>
-      </Box>
+      <Flex w={'55vw'} flexDir={'column'} gap={'1rem'}>
+        <Box py={'1rem'}>
+          <ReactMarkdown
+            components={CustomRenderer()}
+            remarkPlugins={[remarkGfm]}
+          >
+            {post.content.content}
+          </ReactMarkdown>
+        </Box>
+        <Divider />
+        <Flex flexDir={'row'} w={'55vw'}>
+          <InputGroup pos={'relative'}>
+            <Textarea placeholder='发布友善的评论'></Textarea>
+            <Button
+              h='2rem'
+              size='sm'
+              zIndex={1}
+              colorScheme='green'
+              pos={'absolute'}
+              bottom={'0.5rem'}
+              right={'.5rem'}
+            >
+              Submit
+            </Button>
+          </InputGroup>
+        </Flex>
+      </Flex>
     </Flex>
   )
 }
@@ -45,14 +69,17 @@ export const getServerSideProps: GetServerSideProps<
       comments: true,
     },
   })
-  if (!post) {
+  if (!post || post.content === null) {
     return {
       notFound: true,
     }
   }
   return {
     props: {
-      post,
+      post: {
+        ...post,
+        content: post.content!,
+      },
     },
   }
 }
