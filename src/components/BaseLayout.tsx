@@ -154,7 +154,7 @@ export default function BaseLayout({
   return (
     <Box>
       <TopHeader />
-      <Box minH={'100vh'} px={'5rem'}>
+      <Box minH={'100vh'} px={'5rem'} pb={'1rem'}>
         {children}
       </Box>
       <ButtomFooter />

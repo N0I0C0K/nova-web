@@ -1,6 +1,12 @@
 import { prisma } from '@/db'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { IsEmail, IsPhoneNumber, IsString, validate } from 'class-validator'
+import {
+  IsEmail,
+  IsMobilePhone,
+  IsPhoneNumber,
+  IsString,
+  validate,
+} from 'class-validator'
 import { PostMethod } from '@/utils/api'
 
 class JoinFormDto {
@@ -11,23 +17,49 @@ class JoinFormDto {
   @IsEmail()
   email!: string
 
-  @IsPhoneNumber()
+  @IsMobilePhone()
   phone!: string
 
   @IsString()
   introduction!: string
 }
 
-export const func = PostMethod(JoinFormDto, async (req, res, form) => {
-  const data = await prisma.joinForm.create({
-    data: {
-      ...form,
+const handler = PostMethod(JoinFormDto, async (req, res, form) => {
+  var user = await prisma.joinForm.findFirst({
+    where: {
+      name: form.name,
     },
   })
-  console.log(data)
-  res.status(200).json({
-    message: 'success',
-  })
+  if (user) {
+    user = await prisma.joinForm.update({
+      where: {
+        name: form.name,
+      },
+      data: {
+        ...form,
+      },
+    })
+    console.log(
+      `success change join form, ${user.name}-${user.email} at ${user.updateAt}`
+    )
+    res.status(200).json({
+      message: 'success',
+    })
+  } else {
+    const data = await prisma.joinForm.create({
+      data: {
+        ...form,
+      },
+    })
+    console.log(
+      `success new join form, ${data.name}-${data.email} at ${data.createAt}`
+    )
+    res.status(200).json({
+      message: 'success',
+    })
+  }
 })
+
+export default handler
 
 

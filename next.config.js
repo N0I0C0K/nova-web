@@ -2,7 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    instrumentationHook: true
+    instrumentationHook: true,
+    swcPlugins: [
+      ["next-superjson-plugin", {}]
+    ],
   }
 }
 

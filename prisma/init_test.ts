@@ -19,6 +19,60 @@ async function main() {
   t_user.every(async (val) => {
     const user = await prisma.user.create({ data: val })
     console.log(user)
+    for (let i = 0; i <= 10; ++i) {
+      const blog = await prisma.post.create({
+        data: {
+          synopsis: `${user.name}'s test synopsis`,
+          title: `${user.name}'s ${i} Blog`,
+          user_id: user.id,
+        },
+      })
+      let md = `# ${blog.title}
+Hello This is ${user.name}'s ${i} title
+
+## list
+
+- item 1
+- item 2
+- item 3
+- item 4
+
+## table
+
+name|type
+--|--
+name a|type a
+name b|type b
+
+## link
+
+[this is test link](https://www.baidu.com)
+
+## sy
+
+> this is test text
+
+## code
+
+\`\`\`c++
+#include<iostream>
+
+using namespace std;
+
+int main(){
+  cout<<"Hello world"<<endl;
+  return 0;
+}
+\`\`\`
+      `
+      const content = await prisma.postContent.create({
+        data: {
+          post_id: blog.id,
+          content: md,
+        },
+      })
+      console.log(`content ${content.id} save`)
+    }
   })
 }
 

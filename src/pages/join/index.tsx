@@ -82,7 +82,7 @@ const JoinPage = () => {
             {({ field }: { field: any }) => (
               <FormControl>
                 <FormLabel>Phone:</FormLabel>
-                <Input type='number' {...field} />
+                <Input type='tel' {...field} />
               </FormControl>
             )}
           </Field>

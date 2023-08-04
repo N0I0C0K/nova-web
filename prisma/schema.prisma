@@ -20,18 +20,17 @@ model Comment {
 }
 
 model Post {
-  id            String      @id @default(auto()) @map("_id") @db.ObjectId
-  slug          String      @unique @default(cuid())
-  title         String
-  synopsis      String
-  badges        String[]
-  createAt      DateTime    @default(now())
-  updateAt      DateTime    @updatedAt
-  user_id       String      @db.ObjectId
-  author        User        @relation(fields: [user_id], references: [id])
-  postContentId String      @unique @db.ObjectId
-  content       PostContent @relation(fields: [postContentId], references: [id])
-  comments      Comment[]
+  id       String       @id @default(auto()) @map("_id") @db.ObjectId
+  slug     String       @unique @default(cuid())
+  title    String
+  synopsis String
+  badges   String[]
+  createAt DateTime     @default(now())
+  updateAt DateTime     @updatedAt
+  user_id  String       @db.ObjectId
+  author   User         @relation(fields: [user_id], references: [id])
+  comments Comment[]
+  content  PostContent?
 }
 
 model PostContent {
@@ -39,22 +38,28 @@ model PostContent {
   content  String
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
-  post     Post?
+  post_id  String   @unique @db.ObjectId
+  post     Post?    @relation(fields: [post_id], references: [id])
 }
 
 model User {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String   @unique
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  name        String      @unique
   role        String
   description String
   avatarUrl   String?
   posts       Post[]
-  createAt    DateTime @default(now())
-  updateAt    DateTime @updatedAt
+  createAt    DateTime    @default(now())
+  updateAt    DateTime    @updatedAt
+  secure      UserSecure?
 }
 
 model UserSecure {
   id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  user_id  String   @unique @db.ObjectId
+  user     User?    @relation(fields: [user_id], references: [id])
+  email    String
+  phone    String
   username String   @unique
   password String
   salt     String
@@ -63,10 +68,11 @@ model UserSecure {
 
 model JoinForm {
   id           String @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
+  name         String @unique
   email        String
   phone        String
   introduction String
 
   createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
 }
