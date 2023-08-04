@@ -16,6 +16,7 @@ model Comment {
   createAt DateTime @default(now())
   user_id  String   @db.ObjectId
   post_id  String   @db.ObjectId
+  author   User     @relation(fields: [user_id], references: [id])
   post     Post     @relation(fields: [post_id], references: [id])
 }
 
@@ -49,6 +50,7 @@ model User {
   description String
   avatarUrl   String?
   posts       Post[]
+  comments    Comment[]
   createAt    DateTime    @default(now())
   updateAt    DateTime    @updatedAt
   secure      UserSecure?
@@ -67,12 +69,11 @@ model UserSecure {
 }
 
 model JoinForm {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  name         String @unique
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  name         String   @unique
   email        String
   phone        String
   introduction String
-
-  createAt DateTime @default(now())
-  updateAt DateTime @updatedAt
+  createAt     DateTime @default(now())
+  updateAt     DateTime @updatedAt
 }

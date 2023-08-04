@@ -13,6 +13,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import CustomRenderer from '@/components/markdown/CustomRenderer'
 import { prisma } from '@/db'
+import { CommentItem } from '@/components/CommentItem'
 
 const ArticlePage: FC<{
   post: ArticleContentProps
@@ -29,21 +30,24 @@ const ArticlePage: FC<{
           </ReactMarkdown>
         </Box>
         <Divider />
-        <Flex flexDir={'row'} w={'55vw'}>
-          <InputGroup pos={'relative'}>
-            <Textarea placeholder='发布友善的评论'></Textarea>
-            <Button
-              h='2rem'
-              size='sm'
-              zIndex={1}
-              colorScheme='green'
-              pos={'absolute'}
-              bottom={'0.5rem'}
-              right={'.5rem'}
-            >
-              Submit
-            </Button>
-          </InputGroup>
+        <InputGroup pos={'relative'}>
+          <Textarea placeholder='发布友善的评论'></Textarea>
+          <Button
+            h='2rem'
+            size='sm'
+            zIndex={1}
+            colorScheme='green'
+            pos={'absolute'}
+            bottom={'0.5rem'}
+            right={'.5rem'}
+          >
+            Submit
+          </Button>
+        </InputGroup>
+        <Flex mt={'2rem'} flexDir={'column'} gap={'.5rem'}>
+          {post.comments.map((val) => (
+            <CommentItem comment={val} />
+          ))}
         </Flex>
       </Flex>
     </Flex>
@@ -66,7 +70,11 @@ export const getServerSideProps: GetServerSideProps<
     include: {
       author: true,
       content: true,
-      comments: true,
+      comments: {
+        include: {
+          author: true,
+        },
+      },
     },
   })
   if (!post || post.content === null) {

@@ -81,7 +81,7 @@ export const defaults: Defaults = {
   hr: (props) => {
     return <Divider />
   },
-  a: Link,
+  a: (props) => <Link {...props} color='blue.400' />,
   img: Image,
   text: (props) => {
     const { children } = props
