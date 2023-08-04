@@ -25,6 +25,7 @@ async function main() {
           synopsis: `${user.name}'s test synopsis`,
           title: `${user.name}'s ${i} Blog`,
           user_id: user.id,
+          badges: i % 3 === 0 ? ['game', 'c++'] : ['python', 'art'],
         },
       })
       let md = `# ${blog.title}
@@ -71,6 +72,15 @@ int main(){
           content: md,
         },
       })
+      for (let j = 0; j <= 10; ++j) {
+        const comment = await prisma.comment.create({
+          data: {
+            content: `this is test ${j} comment`,
+            user_id: user.id,
+            post_id: blog.id,
+          },
+        })
+      }
       console.log(`content ${content.id} save`)
     }
   })
