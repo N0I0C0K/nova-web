@@ -46,7 +46,7 @@ const ArticlePage: FC<{
         </InputGroup>
         <Flex mt={'2rem'} flexDir={'column'} gap={'.5rem'}>
           {post.comments.map((val) => (
-            <CommentItem comment={val} />
+            <CommentItem comment={val} key={val.id} />
           ))}
         </Flex>
       </Flex>

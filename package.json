@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "reset": "npx prisma db push --force-reset && npx prisma db seed"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.0",

@@ -8,6 +8,7 @@ export const BlogItem = ({
   synopsis,
   authorName,
   badges,
+  updateAt,
 }: {
   id: string
   title: string
@@ -35,14 +36,17 @@ export const BlogItem = ({
         <Heading fontSize={'lg'}>{title}</Heading>
       </Link>
       <Text color={'gray.400'}>{synopsis}</Text>
-      <Text
-        position={'absolute'}
-        color={'gray.400'}
-        bottom={'1rem'}
-        right={'1rem'}
-      >
-        {authorName}
-      </Text>
+      <Link href={`/member/${authorName}`}>
+        <Text
+          position={'absolute'}
+          color={'gray.400'}
+          bottom={'1rem'}
+          right={'1rem'}
+        >
+          {authorName}
+          {updateAt && ` - ${updateAt.toLocaleDateString()}`}
+        </Text>
+      </Link>
       {badges && badges.length > 0 && (
         <Flex gap={'.5rem'} mt={'1rem'}>
           {badges.map((badge, idx) => {
