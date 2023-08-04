@@ -29,6 +29,8 @@ export default function BlogPage({ articles }: { articles: BlogProps[] }) {
                 synopsis={it.synopsis}
                 title={it.title}
                 badges={it.badges}
+                createAt={it.createAt}
+                updateAt={it.updateAt}
               />
             </ListItem>
           )

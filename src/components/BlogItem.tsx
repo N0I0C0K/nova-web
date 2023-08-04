@@ -14,6 +14,8 @@ export const BlogItem = ({
   synopsis: string
   authorName: string
   badges?: string[]
+  updateAt?: Date
+  createAt?: Date
 }) => {
   return (
     <Box

@@ -50,7 +50,7 @@ export const defaults: Defaults = {
   blockquote: (props) => {
     const { children } = props
     return (
-      <Code as='blockquote' p={2}>
+      <Code as='blockquote' rounded={'md'} p={2}>
         {children}
       </Code>
     )
@@ -68,6 +68,7 @@ export const defaults: Defaults = {
         whiteSpace='break-spaces'
         display='block'
         w='full'
+        rounded={'md'}
         p={2}
       >
         {children}
