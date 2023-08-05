@@ -44,7 +44,7 @@ export const BlogItem = ({
           right={'1rem'}
         >
           {authorName}
-          {updateAt && ` - ${updateAt.toLocaleDateString()}`}
+          {updateAt && ` - ${updateAt.toLocaleString()}`}
         </Text>
       </Link>
       {badges && badges.length > 0 && (

@@ -6,11 +6,25 @@ export const CommentItem: FC<{
   comment: CommentWithUserProps
 }> = ({ comment }) => {
   return (
-    <Flex p={'1rem'} className='border rounded-md' gap={'1rem'}>
+    <Flex
+      p={'1rem'}
+      className='border rounded-md'
+      gap={'1rem'}
+      pos={'relative'}
+    >
       <Avatar />
       <Flex flexDir={'column'}>
         <Text color={'gray'}>{comment.author.name}</Text>
         <Text>{comment.content}</Text>
+        <Text
+          color={'gray'}
+          fontSize={'smaller'}
+          pos={'absolute'}
+          bottom={'.5rem'}
+          right={'1rem'}
+        >
+          {comment.createAt.toLocaleString()}
+        </Text>
       </Flex>
     </Flex>
   )

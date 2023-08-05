@@ -6,6 +6,7 @@ import {
   Flex,
   InputGroup,
   Textarea,
+  Text,
 } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
 import { FC } from 'react'
@@ -29,6 +30,7 @@ const ArticlePage: FC<{
             {post.content.content}
           </ReactMarkdown>
         </Box>
+        <Text>{post.updateAt.toLocaleString()}</Text>
         <Divider />
         <InputGroup pos={'relative'}>
           <Textarea placeholder='发布友善的评论'></Textarea>
