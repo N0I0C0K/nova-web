@@ -6,8 +6,11 @@
 
 - next.js - page router
 - mongodb
-- typeorm
--
+- prisma
+- next-auth
+- react-markdown
+- tailwind-css
+- chakra-ui
 
 ## 页面
 
