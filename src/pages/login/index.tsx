@@ -8,14 +8,33 @@ import {
   Heading,
   Input,
   Text,
+  useToast,
 } from '@chakra-ui/react'
 import { Form, Formik } from 'formik'
 import { GetServerSideProps } from 'next'
 import { useSession, signIn, getCsrfToken } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import { useEffect, useMemo } from 'react'
 
 const LoginPage = () => {
   const sess = useSession()
   const axios = useAxios()
+  const router = useRouter()
+  const err = useMemo(() => {
+    return router.query.error
+  }, [router])
+  const toast = useToast()
+  useEffect(() => {
+    if (err) {
+      toast({
+        title: '登录失败',
+        description: '请检查用户名和密码是否正确',
+        status: 'error',
+        duration: 10000,
+        isClosable: true,
+      })
+    }
+  }, [err, toast])
   return (
     <Flex
       flexDir={'column'}
@@ -24,7 +43,9 @@ const LoginPage = () => {
     >
       <Heading mb={'3rem'}>Login</Heading>
       {sess.status === 'authenticated' && (
-        <Text>{`你已经以 ${sess.data?.user?.name} 的身份登录`}</Text>
+        <Text
+          color={'gray'}
+        >{`你已经以 ${sess.data?.user?.name} 的身份登录`}</Text>
       )}
       <Formik
         initialValues={{
@@ -34,12 +55,12 @@ const LoginPage = () => {
         onSubmit={async (val) => {
           console.log(val)
           const csrfToken = await getCsrfToken()
-          const res = await axios!.post('/auth/callback/account', {
+          const res = await axios.post('/auth/callback/account', {
             csrfToken,
             username: val.username,
             password: val.password,
           })
-          console.log(res)
+          window.location.href = res.request?.responseURL
         }}
       >
         {({ values, handleChange, handleBlur, handleSubmit }) => (
