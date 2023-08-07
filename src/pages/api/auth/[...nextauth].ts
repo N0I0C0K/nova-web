@@ -2,12 +2,8 @@ import { prisma } from '@/db'
 import NextAuth, { AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
-export interface CustomSession {
-  expires: string
+export interface CustomToken {
   id: string
-  user: {
-    name: string | undefined | null
-  }
 }
 
 export const options: AuthOptions = {
@@ -43,15 +39,12 @@ export const options: AuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user, account }) {
-      console.log(user)
-      console.log(account)
-      console.log(token)
+      if (user) {
+        token.id = user.id
+      }
       return token
     },
     async session({ session, token, user }) {
-      console.log(session)
-      console.log(token)
-      console.log(user)
       return session
     },
   },

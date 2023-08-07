@@ -2,27 +2,35 @@ import { prisma } from '@/db'
 import { LoginRequired, PostMethod } from '@/utils/api'
 import { IsString } from 'class-validator'
 import { getServerSession } from 'next-auth'
-import { CustomSession, options } from '../auth/[...nextauth]'
+import { CustomToken, options } from '../auth/[...nextauth]'
+import { getToken } from 'next-auth/jwt'
 
 class CommentForm {
   @IsString()
-  comment!: string
+  content!: string
 
   @IsString()
   postId!: string
 }
 
-export default LoginRequired(
+const handler = LoginRequired(
   PostMethod(CommentForm, async (req, res, form) => {
     console.log(form)
     const sess = await getServerSession(req, res, options)
-
-    // await prisma.comment.create({
-    //   data: {
-    //     content: form.comment,
-    //     post_id: form.postId,
-    //     user_id: sess.
-    //   },
-    // })
+    const token = await getToken({ req })
+    const { id: user_id } = token as unknown as CustomToken
+    const comment = await prisma.comment.create({
+      data: {
+        content: form.content,
+        post_id: form.postId,
+        user_id: user_id,
+      },
+      include: {
+        author: true,
+      },
+    })
+    res.status(200).json(comment)
   })
 )
+
+export default handler

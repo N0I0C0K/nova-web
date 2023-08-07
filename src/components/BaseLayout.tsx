@@ -16,7 +16,7 @@ import { NovaNmal, NovaText } from './Nova'
 import { ColorModeToggle } from './ColorModeToggle'
 import { useRouter } from 'next/router'
 import { FC, useMemo } from 'react'
-import { signIn, useSession } from 'next-auth/react'
+import { signIn, signOut, useSession } from 'next-auth/react'
 
 const SelectLink: FC<{
   href: string
@@ -150,10 +150,14 @@ export function ButtomFooter() {
         variant={'link'}
         colorScheme='blue'
         onClick={() => {
-          signIn('credentials', {
-            callbackUrl: '/',
-            redirect: true,
-          })
+          if (isLogin) {
+            signOut()
+          } else {
+            signIn('credentials', {
+              callbackUrl: '/member',
+              redirect: true,
+            })
+          }
         }}
       >
         {isLogin ? `Logout(${sess.data?.user?.name})` : 'Login'}
