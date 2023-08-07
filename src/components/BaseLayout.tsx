@@ -1,18 +1,6 @@
-import {
-  Box,
-  Flex,
-  Stack,
-  Spacer,
-  Input,
-  InputGroup,
-  InputRightElement,
-  ButtonGroup,
-  Button,
-  Text,
-} from '@chakra-ui/react'
+import { Box, Flex, Spacer, Button, Text } from '@chakra-ui/react'
 import { Link } from '@chakra-ui/next-js'
 import { TopSearch } from './TopSearch'
-import { NovaNmal, NovaText } from './Nova'
 import { ColorModeToggle } from './ColorModeToggle'
 import { useRouter } from 'next/router'
 import { FC, useMemo } from 'react'
@@ -116,7 +104,6 @@ function TopHeader() {
 
 export function ButtomFooter() {
   const sess = useSession()
-  console.log(sess)
 
   const isLogin = useMemo(() => {
     return sess.status === 'authenticated'
@@ -154,7 +141,7 @@ export function ButtomFooter() {
             signOut()
           } else {
             signIn('credentials', {
-              callbackUrl: '/member',
+              callbackUrl: '/',
               redirect: true,
             })
           }

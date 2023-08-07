@@ -15,7 +15,6 @@ class CommentForm {
 
 const handler = LoginRequired(
   PostMethod(CommentForm, async (req, res, form) => {
-    console.log(form)
     const sess = await getServerSession(req, res, options)
     const token = await getToken({ req })
     const { id: user_id } = token as unknown as CustomToken

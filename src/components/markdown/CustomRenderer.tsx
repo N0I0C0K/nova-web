@@ -1,4 +1,4 @@
-// this code is from https://github.com/mustaphaturhan/chakra-ui-markdown-renderer
+// this code is from https://github.com/mustaphaturhan/chakra-ui-markdown-renderer Modified part of the code for custom
 // Thanks!
 // Custom renderer
 
@@ -41,7 +41,11 @@ interface Defaults extends Components {
 export const defaults: Defaults = {
   p: (props) => {
     const { children } = props
-    return <Text mb={2}>{children}</Text>
+    return (
+      <Text mb={2} className='first-letter:text-2xl'>
+        {children}
+      </Text>
+    )
   },
   em: (props) => {
     const { children } = props

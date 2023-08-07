@@ -45,7 +45,10 @@ export const options: AuthOptions = {
       return token
     },
     async session({ session, token, user }) {
-      return session
+      return {
+        ...session,
+        id: token.id,
+      }
     },
   },
   session: {
