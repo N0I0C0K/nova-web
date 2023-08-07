@@ -16,6 +16,7 @@ import { NovaNmal, NovaText } from './Nova'
 import { ColorModeToggle } from './ColorModeToggle'
 import { useRouter } from 'next/router'
 import { FC, useMemo } from 'react'
+import { signIn, useSession } from 'next-auth/react'
 
 const SelectLink: FC<{
   href: string
@@ -114,6 +115,12 @@ function TopHeader() {
 }
 
 export function ButtomFooter() {
+  const sess = useSession()
+  console.log(sess)
+
+  const isLogin = useMemo(() => {
+    return sess.status === 'authenticated'
+  }, [sess.status])
   return (
     <Flex
       className='border-t items-center'
@@ -139,9 +146,18 @@ export function ButtomFooter() {
       <Link href='/game'>Games</Link>
       <Link href='/about'>About</Link>
       <Link href='nick131410@aliyun.com'>Contact Us</Link>
-      <Link href='/login' color={'blue.300'}>
-        Login
-      </Link>
+      <Button
+        variant={'link'}
+        colorScheme='blue'
+        onClick={() => {
+          signIn('credentials', {
+            callbackUrl: '/',
+            redirect: true,
+          })
+        }}
+      >
+        {isLogin ? `Logout(${sess.data?.user?.name})` : 'Login'}
+      </Button>
     </Flex>
   )
 }

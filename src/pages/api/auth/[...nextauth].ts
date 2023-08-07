@@ -1,7 +1,16 @@
-import NextAuth from 'next-auth'
+import { prisma } from '@/db'
+import NextAuth, { AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
-export default NextAuth({
+export interface CustomSession {
+  expires: string
+  id: string
+  user: {
+    name: string | undefined | null
+  }
+}
+
+export const options: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'account',
@@ -12,18 +21,47 @@ export default NextAuth({
       },
       async authorize(credentials, req) {
         console.log(credentials)
-        if (credentials?.username !== 'admin') {
+        // todo, imporve
+        const userSecure = await prisma.userSecure.findFirst({
+          where: {
+            username: credentials?.username,
+            password: credentials?.password,
+          },
+          include: {
+            user: true,
+          },
+        })
+        if (!userSecure) {
           return null
         }
         return {
-          id: 'admin',
-          name: credentials?.username,
+          id: userSecure.user!.id,
+          name: userSecure.user!.name,
         }
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user, account }) {
+      console.log(user)
+      console.log(account)
+      console.log(token)
+      return token
+    },
+    async session({ session, token, user }) {
+      console.log(session)
+      console.log(token)
+      console.log(user)
+      return session
+    },
+  },
+  session: {
+    strategy: 'jwt',
+  },
   pages: {
     signIn: '/login',
     error: '/login',
   },
-})
+}
+
+export default NextAuth(options)

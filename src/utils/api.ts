@@ -1,6 +1,8 @@
+import { options } from '@/pages/api/auth/[...nextauth]'
 import { plainToClass } from 'class-transformer'
 import { validate } from 'class-validator'
 import type { NextApiRequest, NextApiResponse, NextApiHandler } from 'next'
+import { getServerSession } from 'next-auth'
 
 export function MethodOnly(method: 'POST' | 'GET' | 'PUT' | 'DELETE') {
   return function (target: any, key: string, descriptor: PropertyDescriptor) {
@@ -45,5 +47,23 @@ export function PostMethod<T extends object>(
       return
     }
     return await handler(req, res, form)
+  }
+}
+
+export function LoginRequired(
+  handler: (
+    req: NextApiRequest,
+    res: NextApiResponse
+  ) => unknown | Promise<unknown>
+): NextApiHandler {
+  return async (req, res) => {
+    const sess = await getServerSession(req, res, options)
+    if (!sess) {
+      res.status(401).json({
+        messgae: 'required login',
+      })
+      return
+    }
+    return await handler(req, res)
   }
 }

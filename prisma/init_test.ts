@@ -18,7 +18,15 @@ async function main() {
 
   t_user.every(async (val) => {
     const user = await prisma.user.create({ data: val })
-    console.log(user)
+    const secure = await prisma.userSecure.create({
+      data: {
+        username: val.name,
+        password: 'test1234',
+        email: `${val.name}@nova.club`,
+        salt: 'test',
+        user_id: user.id,
+      },
+    })
     for (let i = 0; i <= 10; ++i) {
       const blog = await prisma.post.create({
         data: {
