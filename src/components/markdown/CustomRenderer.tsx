@@ -42,7 +42,7 @@ export const defaults: Defaults = {
   p: (props) => {
     const { children } = props
     return (
-      <Text mb={2} className='first-letter:text-2xl'>
+      <Text mb={2} className='first-letter:text-2xl tracking-wide'>
         {children}
       </Text>
     )
@@ -163,6 +163,7 @@ export const defaults: Defaults = {
         my={4}
         as={`h${level}`}
         size={sizes[`${level - 1}`]}
+        className='hover:underline decoration-orange-400 cursor-pointer'
         {...getCoreProps(props)}
       >
         {children}

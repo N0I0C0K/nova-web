@@ -1,5 +1,5 @@
 import CustomRenderer from '@/components/markdown/CustomRenderer'
-import { Box, Text } from '@chakra-ui/react'
+import { Box, Flex, Text } from '@chakra-ui/react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -22,8 +22,8 @@ const about = `
 
 export default function AboutPage() {
   return (
-    <Box p={'5rem'}>
-      <Box py={'1rem'}>
+    <Flex pt={'5rem'} flexDirection={'column'} className='items-center'>
+      <Box width={'45rem'}>
         <ReactMarkdown
           components={CustomRenderer()}
           remarkPlugins={[remarkGfm]}
@@ -31,6 +31,6 @@ export default function AboutPage() {
           {about}
         </ReactMarkdown>
       </Box>
-    </Box>
+    </Flex>
   )
 }
