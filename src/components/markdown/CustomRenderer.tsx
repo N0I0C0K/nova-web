@@ -20,7 +20,7 @@ import { Checkbox } from '@chakra-ui/checkbox'
 import { Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table'
 import { chakra } from '@chakra-ui/system'
 import dynamic from 'next/dynamic'
-import { useColorMode } from '@chakra-ui/react'
+import { Box, useColorMode } from '@chakra-ui/react'
 import {
   oneDark as codedark,
   oneLight as codelight,

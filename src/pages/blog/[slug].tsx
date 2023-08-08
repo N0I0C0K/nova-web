@@ -13,6 +13,7 @@ import {
   Text,
   useToast,
   Spacer,
+  IconButton,
 } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
 import { FC, useState } from 'react'
@@ -23,6 +24,9 @@ import { prisma } from '@/db'
 import { CommentItem } from '@/components/CommentItem'
 import { useAxios } from '@/components/AxiosProvider'
 import { Link } from '@chakra-ui/next-js'
+import { useSession } from 'next-auth/react'
+import { useUserSession } from '@/components/UserInfoProvider'
+import { DelIcon, EditIcon } from '@/components/Icons'
 
 const ArticlePage: FC<{
   post: ArticleContentProps
@@ -31,6 +35,7 @@ const ArticlePage: FC<{
   const [comments, setComments] = useState<CommentWithUserProps[]>(
     post.comments
   )
+  const loginUser = useUserSession()
   const axios = useAxios()
   const toast = useToast()
   return (
@@ -44,7 +49,26 @@ const ArticlePage: FC<{
             {post.content.content}
           </ReactMarkdown>
         </Box>
-        <Flex gap={'.5rem'}>
+        <Flex gap={'.5rem'} alignItems={'center'}>
+          {loginUser.isLogin && loginUser.id === post.user_id ? (
+            <>
+              <Link
+                aria-label='edit'
+                color={'green'}
+                href={`/blog/edit/${post.slug}`}
+              >
+                修改
+              </Link>
+              <Button
+                leftIcon={<DelIcon />}
+                aria-label='del'
+                colorScheme='red'
+                variant={'ghost'}
+              >
+                删除
+              </Button>
+            </>
+          ) : null}
           <Spacer />
           <Link href={`/member/${post.author.name}`} fontSize={'sm'}>
             @{post.author.name}

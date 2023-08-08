@@ -37,10 +37,8 @@ export function PostMethod<T extends object>(
       return
     }
     const form = plainToClass(cls, req.body)
-    console.log(form)
     const err = await validate(form)
     if (err && err.length > 0) {
-      console.log(err)
       res.status(405).json({
         message: 'invaild form data',
       })

@@ -2,6 +2,8 @@ import { prisma } from '@/db'
 import NextAuth, { AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
+import { decode as r_decode } from 'next-auth/jwt'
+
 export interface CustomToken {
   id: string
 }
@@ -16,7 +18,6 @@ export const options: AuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials, req) {
-        console.log(credentials)
         // todo, imporve
         const userSecure = await prisma.userSecure.findFirst({
           where: {
@@ -51,6 +52,7 @@ export const options: AuthOptions = {
       }
     },
   },
+  jwt: {},
   session: {
     strategy: 'jwt',
   },
