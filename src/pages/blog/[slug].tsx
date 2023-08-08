@@ -12,6 +12,7 @@ import {
   Textarea,
   Text,
   useToast,
+  Spacer,
 } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
 import { FC, useState } from 'react'
@@ -21,6 +22,7 @@ import CustomRenderer from '@/components/markdown/CustomRenderer'
 import { prisma } from '@/db'
 import { CommentItem } from '@/components/CommentItem'
 import { useAxios } from '@/components/AxiosProvider'
+import { Link } from '@chakra-ui/next-js'
 
 const ArticlePage: FC<{
   post: ArticleContentProps
@@ -42,7 +44,15 @@ const ArticlePage: FC<{
             {post.content.content}
           </ReactMarkdown>
         </Box>
-        <Text>{post.updateAt.toLocaleString()}</Text>
+        <Flex gap={'.5rem'}>
+          <Spacer />
+          <Link href={`/member/${post.author.name}`} fontSize={'sm'}>
+            @{post.author.name}
+          </Link>
+          <Text color={'gray'} fontSize={'sm'}>
+            最后编剧于{post.updateAt.toLocaleString()}
+          </Text>
+        </Flex>
         <Divider />
         <InputGroup pos={'relative'}>
           <Textarea

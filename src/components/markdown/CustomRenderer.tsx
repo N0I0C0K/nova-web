@@ -19,6 +19,22 @@ import { Image } from '@chakra-ui/image'
 import { Checkbox } from '@chakra-ui/checkbox'
 import { Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table'
 import { chakra } from '@chakra-ui/system'
+import dynamic from 'next/dynamic'
+import { useColorMode } from '@chakra-ui/react'
+import {
+  oneDark as codedark,
+  oneLight as codelight,
+} from 'react-syntax-highlighter/dist/cjs/styles/prism'
+
+const SyntaxHighlighter = dynamic(
+  () =>
+    import('react-syntax-highlighter').then((mod) => {
+      return mod.Prism
+    }),
+  {
+    loading: () => <Text>loading</Text>,
+  }
+)
 
 type GetCoreProps = {
   children?: React.ReactNode
@@ -60,23 +76,27 @@ export const defaults: Defaults = {
     )
   },
   code: (props) => {
-    const { inline, children, className } = props
-
+    const { inline, children, className, lang } = props
+    const match = /language-(\w+)/.exec(className || '')
     if (inline) {
-      return <Code p={2}>{children}</Code>
+      return (
+        <Code px={2} py={1}>
+          {children}
+        </Code>
+      )
     }
-
+    const mode = useColorMode()
     return (
-      <Code
-        className={className}
-        whiteSpace='break-spaces'
-        display='block'
-        w='full'
-        rounded={'md'}
-        p={2}
+      <SyntaxHighlighter
+        language={'cpp'}
+        showLineNumbers
+        style={mode.colorMode === 'dark' ? codedark : codelight}
+        customStyle={{
+          borderRadius: '10px',
+        }}
       >
-        {children}
-      </Code>
+        {String(children)}
+      </SyntaxHighlighter>
     )
   },
   del: (props) => {

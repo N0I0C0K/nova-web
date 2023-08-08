@@ -6,6 +6,7 @@ const nextConfig = {
     swcPlugins: [
       ["next-superjson-plugin", {}]
     ],
+    esmExternals:true,
   }
 }
 

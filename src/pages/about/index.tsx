@@ -1,4 +1,5 @@
 import CustomRenderer from '@/components/markdown/CustomRenderer'
+import { Link } from '@chakra-ui/next-js'
 import { Box, Flex, Text } from '@chakra-ui/react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -31,6 +32,16 @@ export default function AboutPage() {
           {about}
         </ReactMarkdown>
       </Box>
+      <Link
+        href={'/join'}
+        fontSize={'3xl'}
+        color={'orange.400'}
+        fontStyle={'italic'}
+        fontWeight={'bold'}
+        mt={'2rem'}
+      >
+        Join Us
+      </Link>
     </Flex>
   )
 }
