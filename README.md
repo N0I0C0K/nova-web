@@ -26,3 +26,9 @@
 考虑加入的功能：
 
 - 个人页面
+
+
+## 截图展示
+
+![home](<doc/website shortcut.jpeg>)
+![dark](doc/dark.jpeg)
