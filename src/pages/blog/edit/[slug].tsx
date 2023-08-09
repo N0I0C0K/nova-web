@@ -24,7 +24,7 @@ import {
   oneDark as codedark,
   oneLight as codelight,
 } from 'react-syntax-highlighter/dist/cjs/styles/prism'
-import EditableSyntaxHighlighter from '@/components/EditableSyntax'
+import EditCode from '@/components/EditableCodeTextare'
 
 const BlogEditPage: FC<{
   post: ArticleWithContent
@@ -42,16 +42,20 @@ const BlogEditPage: FC<{
         <EditableInput />
       </Editable> */}
       <Flex w='100%' flexDir='row'>
-        <Box w={'50%'} h={'40rem'} overflow={'scroll'}>
-          {/* <EditableSyntaxHighlighter
+        <Box w={'50%'} h={'40rem'} overflow={'scroll'} borderRadius={'xl'}>
+          <EditCode
             value={text}
-            language={'markdown'}
-            onChange={(val) => {
-              console.log(val)
+            language='md'
+            data-color-mode={mode.colorMode}
+            style={{
+              fontSize: '1rem',
+              fontFamily: 'monospace',
             }}
-            style={{}}
-          /> */}
-          <Textarea
+            onChange={(e) => {
+              setText(e.target.value)
+            }}
+          />
+          {/* <Textarea
             value={text}
             h={'40rem'}
             onKeyDown={(e) => {
@@ -63,7 +67,7 @@ const BlogEditPage: FC<{
             onChange={(e) => {
               setText(e.target.value)
             }}
-          />
+          /> */}
         </Box>
         <Box
           p='2rem'

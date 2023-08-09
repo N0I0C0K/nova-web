@@ -3,7 +3,17 @@ import SyntaxHighlighter from 'react-syntax-highlighter'
 import debounce from 'lodash/debounce'
 import { Box } from '@chakra-ui/react'
 
-const EditableSyntaxHighlighter = ({ language, value, onChange, style }) => {
+const EditableSyntaxHighlighter = ({
+  language,
+  value,
+  onChange,
+  style,
+}: {
+  language: string
+  onChange: (s: string) => void
+  value: string
+  style: any
+}) => {
   const [code, setCode] = useState(value)
   const codeRef = useRef<HTMLDivElement>(null)
 

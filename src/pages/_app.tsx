@@ -1,4 +1,5 @@
 import '@/styles/globals.css'
+import '@/components/EditableCodeTextare/style/index.css'
 import type { AppProps } from 'next/app'
 import { ChakraProvider } from '@chakra-ui/react'
 import BaseLayout from '@/components/BaseLayout'
