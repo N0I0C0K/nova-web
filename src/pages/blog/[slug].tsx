@@ -27,6 +27,7 @@ import { Link } from '@chakra-ui/next-js'
 import { useSession } from 'next-auth/react'
 import { useUserSession } from '@/components/UserInfoProvider'
 import { DelIcon, EditIcon } from '@/components/Icons'
+import { useRouter } from 'next/router'
 
 const ArticlePage: FC<{
   post: ArticleContentProps
@@ -38,6 +39,7 @@ const ArticlePage: FC<{
   const loginUser = useUserSession()
   const axios = useAxios()
   const toast = useToast()
+  const router = useRouter()
   return (
     <Flex pt={'5rem'} flexDirection={'column'} className='items-center'>
       <Flex w={'55vw'} flexDir={'column'} gap={'1rem'}>
@@ -52,19 +54,17 @@ const ArticlePage: FC<{
         <Flex gap={'.5rem'} alignItems={'center'}>
           {loginUser.isLogin && loginUser.id === post.user_id ? (
             <>
-              <Link
+              <Button
+                leftIcon={<EditIcon />}
                 aria-label='edit'
                 color={'green'}
-                href={`/blog/edit/${post.slug}`}
+                onClick={() => {
+                  router.push(`/blog/edit/${post.slug}`)
+                }}
               >
                 修改
-              </Link>
-              <Button
-                leftIcon={<DelIcon />}
-                aria-label='del'
-                colorScheme='red'
-                variant={'ghost'}
-              >
+              </Button>
+              <Button leftIcon={<DelIcon />} aria-label='del' color={'red.400'}>
                 删除
               </Button>
             </>
@@ -125,7 +125,7 @@ const ArticlePage: FC<{
                 .catch((err) => {
                   toast({
                     title: '评论失败',
-                    description: err.message,
+                    description: '请检查网络/登陆状态',
                     status: 'error',
                     duration: 2000,
                     isClosable: true,
