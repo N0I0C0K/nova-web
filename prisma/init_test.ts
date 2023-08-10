@@ -80,7 +80,14 @@ int main(){
           content: md,
         },
       })
-      for (let j = 0; j <= 10; ++j) {
+      const addition = await prisma.postAddition.create({
+        data: {
+          like: 100,
+          post_id: blog.id,
+        },
+      })
+
+      for (let j = 0; j <= 20; ++j) {
         const comment = await prisma.comment.create({
           data: {
             content: `this is test ${j} comment`,

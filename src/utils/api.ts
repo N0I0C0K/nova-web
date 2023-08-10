@@ -4,19 +4,22 @@ import { validate } from 'class-validator'
 import type { NextApiRequest, NextApiResponse, NextApiHandler } from 'next'
 import { getServerSession } from 'next-auth'
 
-export function MethodOnly(method: 'POST' | 'GET' | 'PUT' | 'DELETE') {
-  return function (target: any, key: string, descriptor: PropertyDescriptor) {
-    const func = descriptor.value
-    descriptor.value = function (...args: any[]) {
-      const [req, res] = args
-      const { method: req_method } = req
-      if (req_method !== method) {
-        res.status(405).json({ message: `Method ${req_method} Not Allowed` })
-        return
+export function ExceptionCatch(handler: NextApiHandler): NextApiHandler {
+  return async (req, res) => {
+    try {
+      handler(req, res)
+    } catch (e) {
+      res.status(500)
+      if (e instanceof Error) {
+        res.status(500).json({
+          message: e.message,
+        })
+      } else if (e instanceof String) {
+        res.status(500).json({
+          message: e,
+        })
       }
-      return func.apply(this, args)
     }
-    return descriptor
   }
 }
 

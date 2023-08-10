@@ -21,16 +21,17 @@ model Comment {
 }
 
 model Post {
-  id       String       @id @default(auto()) @map("_id") @db.ObjectId
-  slug     String       @unique @default(cuid())
+  id       String        @id @default(auto()) @map("_id") @db.ObjectId
+  slug     String        @unique @default(cuid())
   title    String
   synopsis String
   badges   String[]
-  createAt DateTime     @default(now())
-  updateAt DateTime     @updatedAt
-  user_id  String       @db.ObjectId
-  author   User         @relation(fields: [user_id], references: [id])
+  createAt DateTime      @default(now())
+  updateAt DateTime      @updatedAt
+  user_id  String        @db.ObjectId
+  author   User          @relation(fields: [user_id], references: [id])
   comments Comment[]
+  addition PostAddition?
   content  PostContent?
 }
 
@@ -41,6 +42,15 @@ model PostContent {
   updateAt DateTime @updatedAt
   post_id  String   @unique @db.ObjectId
   post     Post?    @relation(fields: [post_id], references: [id])
+}
+
+model PostAddition {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  like      Int    @default(0)
+  dislike   Int    @default(0)
+  viewCount Int    @default(0)
+  post_id   String @unique @db.ObjectId
+  post      Post?  @relation(fields: [post_id], references: [id])
 }
 
 model User {

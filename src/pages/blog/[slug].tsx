@@ -17,6 +17,8 @@ import {
   Avatar,
   Heading,
   ButtonGroup,
+  Icon,
+  Tooltip,
 } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
 import { FC, useState } from 'react'
@@ -49,8 +51,43 @@ const ArticlePage: FC<{
   const toast = useToast()
   const router = useRouter()
   return (
-    <Flex pt={'5rem'} flexDirection={'column'} className='items-center'>
-      <Flex w={'45rem'} flexDir={'column'} gap={'1rem'}>
+    <Flex
+      pos={'relative'}
+      pt={'5rem'}
+      flexDirection={'column'}
+      className='items-center'
+    >
+      {loginUser.isLogin && loginUser.id === post.user_id ? (
+        <Flex
+          pos={'absolute'}
+          flexDir={'column'}
+          gap={'1rem'}
+          left={'4rem'}
+          top={'6rem'}
+        >
+          <Tooltip label='编辑文章'>
+            <IconButton
+              icon={<EditIcon />}
+              aria-label='edit'
+              onClick={() => {
+                router.push(`/blog/edit/${post.slug}`)
+              }}
+              size={'lg'}
+              isRound
+            />
+          </Tooltip>
+          <Tooltip label='删除文章'>
+            <IconButton
+              aria-label='del'
+              icon={<DelIcon />}
+              color={'red.400'}
+              isRound
+              size={'lg'}
+            />
+          </Tooltip>
+        </Flex>
+      ) : null}
+      <Flex pos={'relative'} w={'45rem'} flexDir={'column'} gap={'1rem'}>
         <Flex gap={'.5rem'} alignItems={'center'}>
           <Flex flexDir={'column'}>
             <Heading>{post.title}</Heading>
@@ -81,7 +118,7 @@ const ArticlePage: FC<{
             roundedLeft={'full'}
             w={'8rem'}
           >
-            10
+            {post.addition.like}
           </Button>
           <Button
             aria-label='dislike'
@@ -89,27 +126,10 @@ const ArticlePage: FC<{
             roundedRight={'full'}
             w={'8rem'}
           >
-            10
+            {post.addition.dislike}
           </Button>
         </ButtonGroup>
         <Flex gap={'.5rem'} alignItems={'center'}>
-          {loginUser.isLogin && loginUser.id === post.user_id ? (
-            <>
-              <Button
-                leftIcon={<EditIcon />}
-                aria-label='edit'
-                color={'green'}
-                onClick={() => {
-                  router.push(`/blog/edit/${post.slug}`)
-                }}
-              >
-                修改
-              </Button>
-              <Button leftIcon={<DelIcon />} aria-label='del' color={'red.400'}>
-                删除
-              </Button>
-            </>
-          ) : null}
           <Spacer />
           <Link href={`/member/${post.author.name}`} fontSize={'sm'}>
             @{post.author.name}
@@ -118,7 +138,7 @@ const ArticlePage: FC<{
             最后编剧于{post.updateAt.toLocaleString()}
           </Text>
           <Text color={'gray'} fontSize={'sm'}>
-            浏览1022次
+            浏览{post.addition.viewCount}次
           </Text>
         </Flex>
 
@@ -207,6 +227,7 @@ export const getServerSideProps: GetServerSideProps<
     include: {
       author: true,
       content: true,
+      addition: true,
       comments: {
         include: {
           author: true,
@@ -219,11 +240,22 @@ export const getServerSideProps: GetServerSideProps<
       notFound: true,
     }
   }
+  await prisma.postAddition.update({
+    where: {
+      post_id: post.id,
+    },
+    data: {
+      viewCount: {
+        increment: 1,
+      },
+    },
+  })
   return {
     props: {
       post: {
         ...post,
         content: post.content!,
+        addition: post.addition!,
       },
     },
   }
