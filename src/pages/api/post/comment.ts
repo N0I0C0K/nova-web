@@ -15,6 +15,12 @@ class CommentForm {
 
 const handler = LoginRequired(
   PostMethod(CommentForm, async (req, res, form) => {
+    if (form.content.length > 200) {
+      res.status(403).json({
+        message: '你的话太多了，分成多次说',
+      })
+      return
+    }
     const token = await getToken({ req })
     const { id: user_id } = token as unknown as CustomToken
     const comment = await prisma.comment.create({
