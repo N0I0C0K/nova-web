@@ -14,6 +14,9 @@ import {
   useToast,
   Spacer,
   IconButton,
+  Avatar,
+  Heading,
+  ButtonGroup,
 } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
 import { FC, useState } from 'react'
@@ -26,7 +29,12 @@ import { useAxios } from '@/components/AxiosProvider'
 import { Link } from '@chakra-ui/next-js'
 import { useSession } from 'next-auth/react'
 import { useUserSession } from '@/components/UserInfoProvider'
-import { DelIcon, EditIcon } from '@/components/Icons'
+import {
+  DelIcon,
+  EditIcon,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
+} from '@/components/Icons'
 import { useRouter } from 'next/router'
 
 const ArticlePage: FC<{
@@ -42,8 +50,23 @@ const ArticlePage: FC<{
   const router = useRouter()
   return (
     <Flex pt={'5rem'} flexDirection={'column'} className='items-center'>
-      <Flex w={'55vw'} flexDir={'column'} gap={'1rem'}>
-        <Box py={'1rem'}>
+      <Flex w={'45rem'} flexDir={'column'} gap={'1rem'}>
+        <Flex gap={'.5rem'} alignItems={'center'}>
+          <Flex flexDir={'column'}>
+            <Heading>{post.title}</Heading>
+            <Text color={'gray'}>{post.synopsis}</Text>
+          </Flex>
+          <Spacer />
+          <Flex gap={'1rem'}>
+            <Avatar />
+            <Flex flexDir={'column'}>
+              <Text fontWeight={'bold'}>{post.author.name}</Text>
+              <Text color={'gray'}>{post.createAt.toLocaleString()}</Text>
+            </Flex>
+          </Flex>
+        </Flex>
+        <Divider />
+        <Box>
           <ReactMarkdown
             components={CustomRenderer()}
             remarkPlugins={[remarkGfm]}
@@ -51,6 +74,24 @@ const ArticlePage: FC<{
             {post.content.content}
           </ReactMarkdown>
         </Box>
+        <ButtonGroup className='flex flex-row justify-center' isAttached>
+          <Button
+            aria-label='like'
+            leftIcon={<ThumbsUpIcon />}
+            roundedLeft={'full'}
+            w={'8rem'}
+          >
+            10
+          </Button>
+          <Button
+            aria-label='dislike'
+            rightIcon={<ThumbsDownIcon />}
+            roundedRight={'full'}
+            w={'8rem'}
+          >
+            10
+          </Button>
+        </ButtonGroup>
         <Flex gap={'.5rem'} alignItems={'center'}>
           {loginUser.isLogin && loginUser.id === post.user_id ? (
             <>
@@ -76,7 +117,11 @@ const ArticlePage: FC<{
           <Text color={'gray'} fontSize={'sm'}>
             最后编剧于{post.updateAt.toLocaleString()}
           </Text>
+          <Text color={'gray'} fontSize={'sm'}>
+            浏览1022次
+          </Text>
         </Flex>
+
         <Divider />
         <InputGroup pos={'relative'}>
           <Textarea
