@@ -74,6 +74,7 @@ const ArticlePage: FC<{
               }}
               size={'lg'}
               isRound
+              shadow={'xl'}
             />
           </Tooltip>
           <Tooltip label='删除文章'>
@@ -83,6 +84,7 @@ const ArticlePage: FC<{
               color={'red.400'}
               isRound
               size={'lg'}
+              shadow={'xl'}
             />
           </Tooltip>
         </Flex>
