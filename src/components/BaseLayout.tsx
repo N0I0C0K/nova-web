@@ -5,6 +5,7 @@ import { ColorModeToggle } from './ColorModeToggle'
 import { useRouter } from 'next/router'
 import { FC, useMemo } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react'
+import { useGlobalLayoutProps } from './GlobalHeaderProvider'
 
 const SelectLink: FC<{
   href: string
@@ -158,13 +159,12 @@ export default function BaseLayout({
 }: {
   children: React.ReactNode
 }) {
+  const [layoutProps] = useGlobalLayoutProps()
   return (
     <Box>
-      <TopHeader />
-      <Box minH={'100vh'} px={'5rem'} pb={'1rem'}>
-        {children}
-      </Box>
-      <ButtomFooter />
+      {layoutProps.showHead && <TopHeader />}
+      <Box {...layoutProps.gloablBoxProps}>{children}</Box>
+      {layoutProps.showFooter && <ButtomFooter />}
     </Box>
   )
 }

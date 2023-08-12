@@ -6,6 +6,7 @@ import BaseLayout from '@/components/BaseLayout'
 import { SessionProvider } from 'next-auth/react'
 import { AxiosProvider } from '@/components/AxiosProvider'
 import { UserProvider } from '@/components/UserInfoProvider'
+import { GlobalLayoutPropsProvider } from '@/components/GlobalHeaderProvider'
 
 export default function App({
   Component,
@@ -16,9 +17,11 @@ export default function App({
       <SessionProvider session={session}>
         <AxiosProvider>
           <UserProvider>
-            <BaseLayout>
-              <Component {...pageProps} />
-            </BaseLayout>
+            <GlobalLayoutPropsProvider>
+              <BaseLayout>
+                <Component {...pageProps} />
+              </BaseLayout>
+            </GlobalLayoutPropsProvider>
           </UserProvider>
         </AxiosProvider>
       </SessionProvider>

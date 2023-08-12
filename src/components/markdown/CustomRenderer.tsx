@@ -20,7 +20,7 @@ import { Checkbox } from '@chakra-ui/checkbox'
 import { Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/table'
 import { chakra } from '@chakra-ui/system'
 import dynamic from 'next/dynamic'
-import { Box, useColorMode } from '@chakra-ui/react'
+import { Box, Button, useColorMode } from '@chakra-ui/react'
 import {
   oneDark as codedark,
   oneLight as codelight,
@@ -87,16 +87,30 @@ export const defaults: Defaults = {
     }
     const mode = useColorMode()
     return (
-      <SyntaxHighlighter
-        language={'cpp'}
-        showLineNumbers
-        style={mode.colorMode === 'dark' ? codedark : codelight}
-        customStyle={{
-          borderRadius: '10px',
-        }}
-      >
-        {String(children)}
-      </SyntaxHighlighter>
+      <Box pos={'relative'} className='group'>
+        <SyntaxHighlighter
+          language={'cpp'}
+          showLineNumbers
+          style={mode.colorMode === 'dark' ? codedark : codelight}
+          customStyle={{
+            borderRadius: '10px',
+          }}
+        >
+          {String(children)}
+        </SyntaxHighlighter>
+        <Button
+          pos={'absolute'}
+          top={'.5rem'}
+          right={'.5rem'}
+          variant={'ghost'}
+          className='opacity-0 group-hover:opacity-100'
+          onClick={() => {
+            navigator.clipboard.writeText(String(children))
+          }}
+        >
+          Copy
+        </Button>
+      </Box>
     )
   },
   del: (props) => {

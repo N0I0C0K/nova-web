@@ -89,7 +89,7 @@ const ArticlePage: FC<{
           </Tooltip>
         </Flex>
       ) : null}
-      <Flex pos={'relative'} w={'45rem'} flexDir={'column'} gap={'1rem'}>
+      <Flex pos={'relative'} w={'50rem'} flexDir={'column'} gap={'1rem'}>
         <Flex gap={'.5rem'} alignItems={'center'}>
           <Flex flexDir={'column'}>
             <Heading>{post.title}</Heading>
