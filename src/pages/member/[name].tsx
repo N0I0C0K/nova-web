@@ -1,12 +1,20 @@
 import { BlogItem } from '@/components/BlogItem'
 import { prisma } from '@/db'
 import { MemberProps, ArticleProps } from '@/types'
-import { Avatar, Flex, Heading, Text } from '@chakra-ui/react'
+import { Avatar, ChakraProps, Flex, Heading, Text } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
+import { useSession } from 'next-auth/react'
+
+const MemberTools: React.FC<{
+  sx?: ChakraProps
+}> = ({ sx }) => {
+  return <Flex sx={sx}></Flex>
+}
 
 const MemberSpace: React.FC<{
   member: MemberProps & { posts: ArticleProps[] }
 }> = ({ member }) => {
+  const sess = useSession()
   return (
     <Flex pt={'5rem'} flexDirection={'column'} className='items-center'>
       <Avatar

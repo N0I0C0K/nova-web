@@ -42,6 +42,7 @@ export interface TextareaCodeEditorProps
   ) => void | boolean
 }
 
+// eslint-disable-next-line react/display-name
 export default React.forwardRef<HTMLTextAreaElement, TextareaCodeEditorProps>(
   (props, ref) => {
     const {

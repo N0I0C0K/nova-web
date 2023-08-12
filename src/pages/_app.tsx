@@ -7,6 +7,7 @@ import { SessionProvider } from 'next-auth/react'
 import { AxiosProvider } from '@/components/AxiosProvider'
 import { UserProvider } from '@/components/UserInfoProvider'
 import { GlobalLayoutPropsProvider } from '@/components/GlobalHeaderProvider'
+import { AlertProvider } from '@/components/Providers/AlertProvider'
 
 export default function App({
   Component,
@@ -18,9 +19,11 @@ export default function App({
         <AxiosProvider>
           <UserProvider>
             <GlobalLayoutPropsProvider>
-              <BaseLayout>
-                <Component {...pageProps} />
-              </BaseLayout>
+              <AlertProvider>
+                <BaseLayout>
+                  <Component {...pageProps} />
+                </BaseLayout>
+              </AlertProvider>
             </GlobalLayoutPropsProvider>
           </UserProvider>
         </AxiosProvider>

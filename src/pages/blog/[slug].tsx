@@ -38,6 +38,76 @@ import {
   ThumbsUpIcon,
 } from '@/components/Icons'
 import { useRouter } from 'next/router'
+import { useAlert } from '@/components/Providers/AlertProvider'
+
+const ArticleTools: FC<{
+  post: ArticleContentProps
+}> = ({ post }) => {
+  const router = useRouter()
+  const alter = useAlert()
+  const axios = useAxios()
+  const toast = useToast()
+  return (
+    <Flex
+      pos={'absolute'}
+      flexDir={'column'}
+      gap={'1rem'}
+      left={'4rem'}
+      top={'6rem'}
+    >
+      <Tooltip label='编辑文章'>
+        <IconButton
+          icon={<EditIcon />}
+          aria-label='edit'
+          onClick={() => {
+            router.push(`/blog/edit/${post.slug}`)
+          }}
+          size={'lg'}
+          isRound
+          shadow={'xl'}
+        />
+      </Tooltip>
+      <Tooltip label='删除文章'>
+        <IconButton
+          aria-label='del'
+          icon={<DelIcon />}
+          color={'red.400'}
+          isRound
+          size={'lg'}
+          shadow={'xl'}
+          onClick={() => {
+            alter.show({
+              show: true,
+              title: '删除文章',
+              description: '确定要删除这篇文章吗？',
+              cancel() {},
+              confirm() {
+                axios
+                  .post('/post/del', {
+                    postId: post.id,
+                  })
+                  .then(() => {
+                    toast({
+                      title: '删除成功',
+                      status: 'success',
+                    })
+                    router.push('/blog')
+                  })
+                  .catch((e) => {
+                    toast({
+                      title: '删除失败',
+                      description: e.message,
+                      status: 'error',
+                    })
+                  })
+              },
+            })
+          }}
+        />
+      </Tooltip>
+    </Flex>
+  )
+}
 
 const ArticlePage: FC<{
   post: ArticleContentProps
@@ -49,7 +119,7 @@ const ArticlePage: FC<{
   const loginUser = useUserSession()
   const axios = useAxios()
   const toast = useToast()
-  const router = useRouter()
+
   return (
     <Flex
       pos={'relative'}
@@ -58,36 +128,7 @@ const ArticlePage: FC<{
       className='items-center'
     >
       {loginUser.isLogin && loginUser.id === post.user_id ? (
-        <Flex
-          pos={'absolute'}
-          flexDir={'column'}
-          gap={'1rem'}
-          left={'4rem'}
-          top={'6rem'}
-        >
-          <Tooltip label='编辑文章'>
-            <IconButton
-              icon={<EditIcon />}
-              aria-label='edit'
-              onClick={() => {
-                router.push(`/blog/edit/${post.slug}`)
-              }}
-              size={'lg'}
-              isRound
-              shadow={'xl'}
-            />
-          </Tooltip>
-          <Tooltip label='删除文章'>
-            <IconButton
-              aria-label='del'
-              icon={<DelIcon />}
-              color={'red.400'}
-              isRound
-              size={'lg'}
-              shadow={'xl'}
-            />
-          </Tooltip>
-        </Flex>
+        <ArticleTools post={post} />
       ) : null}
       <Flex pos={'relative'} w={'50rem'} flexDir={'column'} gap={'1rem'}>
         <Flex gap={'.5rem'} alignItems={'center'}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 export const container: React.CSSProperties = {
   position: 'relative',
@@ -6,7 +6,7 @@ export const container: React.CSSProperties = {
   boxSizing: 'border-box',
   padding: 0,
   overflow: 'hidden',
-};
+}
 
 export const textarea: React.CSSProperties = {
   position: 'absolute',
@@ -21,11 +21,12 @@ export const textarea: React.CSSProperties = {
   MozOsxFontSmoothing: 'grayscale',
   WebkitFontSmoothing: 'antialiased',
   WebkitTextFillColor: 'transparent',
-};
+}
 
 export const editor: React.CSSProperties = {
   margin: 0,
   border: 0,
+  padding: '1rem',
   background: 'none',
   boxSizing: 'inherit',
   display: 'inherit',
@@ -44,4 +45,4 @@ export const editor: React.CSSProperties = {
   wordBreak: 'keep-all',
   overflowWrap: 'break-word',
   outline: 0,
-};
+}

@@ -1,4 +1,4 @@
-import { Box, Flex, Spacer, Button, Text } from '@chakra-ui/react'
+import { Box, Flex, Spacer, Button, Text, Avatar } from '@chakra-ui/react'
 import { Link } from '@chakra-ui/next-js'
 import { TopSearch } from './TopSearch'
 import { ColorModeToggle } from './ColorModeToggle'
@@ -61,6 +61,7 @@ function TopHeader() {
   const pathname = useMemo(() => {
     return router.pathname
   }, [router])
+  const sess = useSession()
   return (
     <Flex
       className='items-center backdrop-blur-md z-50'
@@ -95,9 +96,19 @@ function TopHeader() {
         )
       })}
       <Spacer />
-      <Flex gap={1}>
+      <Flex gap={1} alignItems={'center'}>
         <TopSearch className='max-w-xs' />
         <ColorModeToggle />
+        {sess.status === 'authenticated' && (
+          <Link href={`/member/${sess.data.user?.name ?? 'unkown'}`}>
+            <Avatar
+              size={'sm'}
+              name={sess.data.user?.name ?? 'unkown'}
+              h={'3em'}
+              w={'3em'}
+            />
+          </Link>
+        )}
       </Flex>
     </Flex>
   )
