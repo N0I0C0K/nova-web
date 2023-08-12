@@ -1,6 +1,6 @@
 import { prisma } from '@/db'
 import { LoginRequired, PostMethod } from '@/utils/api'
-import { IsString } from 'class-validator'
+import { IsNumber, IsString } from 'class-validator'
 import { getServerSession } from 'next-auth'
 import { CustomToken, options } from '../auth/[...nextauth]'
 import { getToken } from 'next-auth/jwt'
@@ -9,8 +9,8 @@ class CommentForm {
   @IsString()
   content!: string
 
-  @IsString()
-  postId!: string
+  @IsNumber()
+  postId!: number
 }
 
 const handler = LoginRequired(

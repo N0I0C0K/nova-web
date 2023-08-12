@@ -1,12 +1,11 @@
 import { prisma } from '@/db'
 import { LoginRequired, PostMethod } from '@/utils/api'
-import { IsArray, IsString } from 'class-validator'
+import { IsArray, IsNumber, IsString } from 'class-validator'
 import { getToken } from 'next-auth/jwt'
 
 class RemoveCommentDto {
-  @IsString({ each: true })
   @IsArray()
-  commentId!: string[]
+  commentId!: number[]
 }
 
 const handler = LoginRequired(
