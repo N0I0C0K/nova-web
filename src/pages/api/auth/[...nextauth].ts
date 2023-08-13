@@ -18,7 +18,8 @@ export const options: AuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials, req) {
-        // todo, imporve
+        console.log(credentials)
+
         const userSecure = await prisma.userSecure.findFirst({
           where: {
             username: credentials?.username,
