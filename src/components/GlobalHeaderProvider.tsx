@@ -36,8 +36,15 @@ export const GlobalLayoutPropsProvider = ({
 
 export const useGlobalLayoutProps = (): [
   HeaderProps,
-  React.Dispatch<React.SetStateAction<HeaderProps>>
+  React.Dispatch<React.SetStateAction<HeaderProps>>,
+  () => void
 ] => {
   const [head, setHead] = useContext(gloablLayoutPropsContext)
-  return [head, setHead]
+  return [
+    head,
+    setHead,
+    () => {
+      setHead(defaultHeaderProps)
+    },
+  ]
 }

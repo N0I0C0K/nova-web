@@ -165,6 +165,14 @@ export function ButtomFooter() {
   )
 }
 
+function Tools() {
+  return (
+    <Flex flexDir={'column'} pos={'fixed'} right={'1rem'} bottom={'1rem'}>
+      <ColorModeToggle />
+    </Flex>
+  )
+}
+
 export default function BaseLayout({
   children,
 }: {
@@ -173,7 +181,7 @@ export default function BaseLayout({
   const [layoutProps] = useGlobalLayoutProps()
   return (
     <Box>
-      {layoutProps.showHead && <TopHeader />}
+      {layoutProps.showHead ? <TopHeader /> : <Tools />}
       <Box {...layoutProps.gloablBoxProps}>{children}</Box>
       {layoutProps.showFooter && <ButtomFooter />}
     </Box>

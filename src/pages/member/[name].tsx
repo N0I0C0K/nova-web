@@ -13,15 +13,21 @@ import {
 } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
 
 const MemberTools: React.FC<{
   sx?: ChakraProps
 }> = ({ sx }) => {
+  const router = useRouter()
   return (
     <Flex {...sx}>
-      <Tooltip label='修改账户属性'>
+      <Tooltip label='进入管理界面'>
         <IconButton aria-label='edit'>
-          <EditIcon />
+          <EditIcon
+            onClick={() => {
+              router.push('/member/manage')
+            }}
+          />
         </IconButton>
       </Tooltip>
     </Flex>
@@ -39,6 +45,16 @@ const MemberSpace: React.FC<{
       className='items-center'
       pos={'relative'}
     >
+      {sess.status === 'authenticated' &&
+        sess.data?.user?.name === member.name && (
+          <MemberTools
+            sx={{
+              position: 'fixed',
+              bottom: '1rem',
+              left: '1rem',
+            }}
+          />
+        )}
       <Avatar
         name={member.name}
         src={member.avatarUrl ?? ''}

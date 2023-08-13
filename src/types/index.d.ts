@@ -5,6 +5,7 @@ import type {
   PostContent,
   JoinForm,
   PostAddition,
+  Game,
 } from '@prisma/client'
 
 export type ArticleProps = Post & {}
@@ -25,3 +26,9 @@ export type MemberProps = User & {}
 export type CommentProps = Comment
 
 export type CommentWithUserProps = Comment & { author: User }
+
+export type UserAllInfo = User & {
+  posts: Post[]
+  comments: Comment[]
+  games: Game[]
+}
