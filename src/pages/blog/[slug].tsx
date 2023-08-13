@@ -19,6 +19,7 @@ import {
   ButtonGroup,
   Icon,
   Tooltip,
+  ChakraProps,
 } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
 import { FC, useState } from 'react'
@@ -42,19 +43,14 @@ import { useAlert } from '@/components/Providers/AlertProvider'
 
 const ArticleTools: FC<{
   post: ArticleContentProps
-}> = ({ post }) => {
+  sx?: ChakraProps
+}> = ({ post, sx }) => {
   const router = useRouter()
   const alter = useAlert()
   const axios = useAxios()
   const toast = useToast()
   return (
-    <Flex
-      pos={'absolute'}
-      flexDir={'column'}
-      gap={'1rem'}
-      left={'4rem'}
-      top={'6rem'}
-    >
+    <Flex pos={'absolute'} flexDir={'column'} gap={'1rem'} sx={sx}>
       <Tooltip label='编辑文章'>
         <IconButton
           icon={<EditIcon />}
@@ -127,10 +123,16 @@ const ArticlePage: FC<{
       flexDirection={'column'}
       className='items-center'
     >
-      {loginUser.isLogin && loginUser.id === post.user_id ? (
-        <ArticleTools post={post} />
-      ) : null}
       <Flex pos={'relative'} w={'50rem'} flexDir={'column'} gap={'1rem'}>
+        {loginUser.isLogin && loginUser.id === post.user_id ? (
+          <ArticleTools
+            post={post}
+            sx={{
+              left: '-6rem',
+              top: '1rem',
+            }}
+          />
+        ) : null}
         <Flex gap={'.5rem'} alignItems={'center'}>
           <Flex flexDir={'column'}>
             <Heading>{post.title}</Heading>

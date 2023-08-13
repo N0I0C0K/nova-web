@@ -1,5 +1,5 @@
 import { ArticleProps } from '@/types'
-import { Heading, Flex, Badge, Box, Text } from '@chakra-ui/react'
+import { Heading, Flex, Badge, Box, Text, ChakraProps } from '@chakra-ui/react'
 import { Link } from '@chakra-ui/next-js'
 
 export const BlogItem = ({
@@ -9,6 +9,7 @@ export const BlogItem = ({
   authorName,
   badges,
   updateAt,
+  sx,
 }: {
   id: string
   title: string
@@ -17,6 +18,7 @@ export const BlogItem = ({
   badges?: string[]
   updateAt?: Date
   createAt?: Date
+  sx?: ChakraProps
 }) => {
   return (
     <Box
@@ -30,6 +32,7 @@ export const BlogItem = ({
         _dark: {
           bg: 'gray.700',
         },
+        ...sx,
       }}
     >
       <Link href={`/blog/${id}`}>

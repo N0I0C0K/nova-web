@@ -33,6 +33,7 @@ model Post {
   comments Comment[]
   addition PostAddition?
   content  PostContent?
+  Game     Game?
 }
 
 model PostContent {
@@ -64,6 +65,7 @@ model User {
   createAt    DateTime    @default(now())
   updateAt    DateTime    @updatedAt
   secure      UserSecure?
+  games       Game[]
 }
 
 model UserSecure {
@@ -86,4 +88,18 @@ model JoinForm {
   introduction String
   createAt     DateTime @default(now())
   updateAt     DateTime @updatedAt
+}
+
+model Game {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String
+  post_id     Int?     @unique
+  post        Post?    @relation(fields: [post_id], references: [id], onDelete: SetNull)
+  badges      String[]
+  itchUrl     String?
+  imgUrl      String[]
+  developers  User[]
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
 }
