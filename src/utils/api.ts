@@ -7,16 +7,23 @@ import { getServerSession } from 'next-auth'
 export function ExceptionCatch(handler: NextApiHandler): NextApiHandler {
   return async (req, res) => {
     try {
-      handler(req, res)
+      await handler(req, res)
     } catch (e) {
       res.status(500)
-      if (e instanceof Error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.error(e)
+        if (e instanceof Error) {
+          res.status(500).json({
+            message: e.message,
+          })
+        } else if (e instanceof String) {
+          res.status(500).json({
+            message: e,
+          })
+        }
+      } else {
         res.status(500).json({
-          message: e.message,
-        })
-      } else if (e instanceof String) {
-        res.status(500).json({
-          message: e,
+          message: 'error in handle',
         })
       }
     }

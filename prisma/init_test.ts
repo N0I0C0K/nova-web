@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 
+import { MD5 } from 'crypto-js'
+
 const prisma = new PrismaClient()
 
 async function main() {
@@ -18,12 +20,13 @@ async function main() {
 
   t_user.every(async (val) => {
     const user = await prisma.user.create({ data: val })
+    const salt = MD5(`${val.name}`).toString()
     const secure = await prisma.userSecure.create({
       data: {
         username: val.name,
-        password: 'test1234',
+        password: MD5(`${val.name}123456${salt}`).toString(),
         email: `${val.name}@nova.club`,
-        salt: 'test',
+        salt: salt,
         user_id: user.id,
       },
     })
