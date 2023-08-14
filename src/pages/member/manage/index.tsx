@@ -11,18 +11,46 @@ import {
   Button,
   Divider,
   Flex,
+  FormControl,
+  FormLabel,
   IconButton,
+  Input,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Spacer,
   Text,
   Tooltip,
+  useBoolean,
   useToast,
 } from '@chakra-ui/react'
+import { Form, Formik } from 'formik'
 import { GetServerSideProps } from 'next'
 import { getToken } from 'next-auth/jwt'
-import { useEffect, useState } from 'react'
+import { FC, createContext, useContext, useEffect, useState } from 'react'
+import {
+  makeAutoObservable,
+  makeObservable,
+  observable,
+  runInAction,
+} from 'mobx'
+import { observer } from 'mobx-react-lite'
 
-const PostManage = ({ posts }: { posts: ArticleProps[] }) => {
-  const [postsState, setPosts] = useState(posts)
+type UserMainInfo = {
+  name: string
+  username: string
+  description: string
+  avatarUrl?: string
+  phone?: string
+  email?: string
+}
+
+const UserContext = createContext<UserAllInfo>({} as unknown as any)
+
+const PostManage = observer(() => {
+  const user = useContext(UserContext)
+
   const alert = useAlert()
   const axios = useAxios()
   const toast = useToast()
@@ -41,7 +69,8 @@ const PostManage = ({ posts }: { posts: ArticleProps[] }) => {
         <Button>新建</Button>
       </Flex>
       <Divider />
-      {postsState
+      {user.posts
+        .slice()
         .sort((a, b) => {
           return a.createAt.getTime() - b.createAt.getTime()
         })
@@ -89,11 +118,7 @@ const PostManage = ({ posts }: { posts: ArticleProps[] }) => {
                           title: `文章“${val.title}”删除成功`,
                           status: 'success',
                         })
-                        setPosts(
-                          postsState.filter((pp) => {
-                            return pp.id !== val.id
-                          })
-                        )
+                        user.posts = user.posts.filter((pp) => pp.id !== val.id)
                       })
                       .catch((e) => {
                         toast({
@@ -112,9 +137,85 @@ const PostManage = ({ posts }: { posts: ArticleProps[] }) => {
         ))}
     </Flex>
   )
-}
+})
 
-const UserInfo = ({ user }: { user: UserAllInfo }) => {
+const UserInfoModifyModal: FC<{
+  open: boolean
+  onClose: () => void
+}> = observer(({ open, onClose }) => {
+  const axios = useAxios()
+  const toast = useToast()
+  const user = useContext(UserContext)
+  return (
+    <Modal isOpen={open} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader p={'1rem'}>修改用户信息</ModalHeader>
+        <Formik
+          initialValues={{
+            name: user.name,
+            description: user.description,
+          }}
+          onSubmit={(val) => {
+            console.log(val)
+            axios
+              .post('/user/modify', val)
+              .then((res) => {
+                toast({
+                  title: '修改成功',
+                  status: 'success',
+                  isClosable: true,
+                })
+                runInAction(() => {
+                  user.name = val.name
+                  user.description = val.description
+                })
+                onClose()
+              })
+              .catch((e) => {
+                toast({
+                  title: '修改失败',
+                  description: '检查是否合理',
+                  status: 'error',
+                  isClosable: true,
+                })
+              })
+          }}
+        >
+          {({ values, handleChange, handleBlur, handleSubmit }) => (
+            <Form onSubmit={handleSubmit} className='flex flex-col p-4 gap-2'>
+              <FormControl>
+                <FormLabel>Name:</FormLabel>
+                <Input
+                  name='name'
+                  value={values.name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Description:</FormLabel>
+                <Input
+                  name='description'
+                  value={values.description}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </FormControl>
+              <Button mt={'2rem'} type='submit'>
+                Save
+              </Button>
+            </Form>
+          )}
+        </Formik>
+      </ModalContent>
+    </Modal>
+  )
+})
+
+const UserInfo = observer(() => {
+  const user = useContext(UserContext)
+  const [open, setOpen] = useBoolean(false)
   return (
     <Flex
       flexDir={'row'}
@@ -150,12 +251,13 @@ const UserInfo = ({ user }: { user: UserAllInfo }) => {
           {user.secure.email}
         </Button>
       )}
-      <IconButton aria-label='edit' variant={'ghost'}>
+      <IconButton aria-label='edit' variant={'ghost'} onClick={setOpen.toggle}>
         <EditIcon />
       </IconButton>
+      <UserInfoModifyModal open={open} onClose={setOpen.off} />
     </Flex>
   )
-}
+})
 
 const UserManagePage = ({ user }: { user: UserAllInfo }) => {
   const [layout, setLayout, resetLayout] = useGlobalLayoutProps()
@@ -174,19 +276,21 @@ const UserManagePage = ({ user }: { user: UserAllInfo }) => {
     }
   }, [])
   return (
-    <Flex className='justify-center' w={'100%'}>
-      <Flex
-        flexDir={'column'}
-        w={'100%'}
-        maxW={'60rem'}
-        h={'100%'}
-        p={'1rem'}
-        gap={'1rem'}
-      >
-        <UserInfo user={user} />
-        <PostManage posts={user.posts} />
+    <UserContext.Provider value={observable(user)}>
+      <Flex className='justify-center' w={'100%'}>
+        <Flex
+          flexDir={'column'}
+          w={'100%'}
+          maxW={'60rem'}
+          h={'100%'}
+          p={'1rem'}
+          gap={'1rem'}
+        >
+          <UserInfo />
+          <PostManage />
+        </Flex>
       </Flex>
-    </Flex>
+    </UserContext.Provider>
   )
 }
 

@@ -1,32 +1,40 @@
 import { prisma } from '@/db'
 import { LoginRequired, PostMethod } from '@/utils/api'
-import { IsOptional, IsString } from 'class-validator'
-import { isString } from 'lodash'
+import {
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+  IsUrl,
+  Length,
+} from 'class-validator'
 import { getToken } from 'next-auth/jwt'
 
 class UserModifyDto {
+  @Length(2, 10)
   @IsString()
   @IsOptional()
   name?: string
 
+  @Length(1, 100)
   @IsString()
   @IsOptional()
   description?: string
 
-  @IsString()
+  @IsPhoneNumber()
   @IsOptional()
   phone?: string
 
-  @IsString()
+  @IsUrl()
   @IsOptional()
   avatarUrl?: string
 }
 
 const handler = LoginRequired(
   PostMethod(UserModifyDto, async (req, res, form) => {
-    const { id } = getToken({
+    const { id } = (await getToken({
       req,
-    }) as unknown as { id: string }
+    })) as unknown as { id: string }
+
     const user = await prisma.user.findUnique({
       where: {
         id,
@@ -41,7 +49,7 @@ const handler = LoginRequired(
     }
     const user_modified = await prisma.user.update({
       where: {
-        id,
+        id: id,
       },
       data: {
         name: form.name ?? user.name,
@@ -61,3 +69,5 @@ const handler = LoginRequired(
     res.status(200).json(user_modified)
   })
 )
+
+export default handler
