@@ -1,4 +1,12 @@
-import { Box, Flex, Spacer, Button, Text, Avatar } from '@chakra-ui/react'
+import {
+  Box,
+  Flex,
+  Spacer,
+  Button,
+  Text,
+  Avatar,
+  IconButton,
+} from '@chakra-ui/react'
 import { Link } from '@chakra-ui/next-js'
 import { TopSearch } from './TopSearch'
 import { ColorModeToggle } from './ColorModeToggle'
@@ -6,6 +14,7 @@ import { useRouter } from 'next/router'
 import { FC, useMemo } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import { useGlobalLayoutProps } from './GlobalHeaderProvider'
+import { HomeIcon } from './Icons'
 
 const SelectLink: FC<{
   href: string
@@ -166,8 +175,23 @@ export function ButtomFooter() {
 }
 
 function Tools() {
+  const router = useRouter()
   return (
-    <Flex flexDir={'column'} pos={'fixed'} right={'1rem'} bottom={'1rem'}>
+    <Flex
+      flexDir={'column'}
+      pos={'fixed'}
+      right={'1rem'}
+      bottom={'1rem'}
+      gap={'.5rem'}
+    >
+      <IconButton
+        aria-label='go home'
+        onClick={() => {
+          router.push('/')
+        }}
+      >
+        <HomeIcon />
+      </IconButton>
       <ColorModeToggle />
     </Flex>
   )

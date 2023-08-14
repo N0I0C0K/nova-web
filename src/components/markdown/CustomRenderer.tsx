@@ -121,7 +121,9 @@ export const defaults: Defaults = {
     return <Divider />
   },
   a: (props) => <Link {...props} color='blue.400' />,
-  img: Image,
+  img: (props) => {
+    return <Image {...props} rounded={'lg'}></Image>
+  },
   text: (props) => {
     const { children } = props
     return <Text as='span'>{children}</Text>

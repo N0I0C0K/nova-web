@@ -6,6 +6,7 @@ import type {
   JoinForm,
   PostAddition,
   Game,
+  UserSecure,
 } from '@prisma/client'
 
 export type ArticleProps = Post & {}
@@ -31,4 +32,5 @@ export type UserAllInfo = User & {
   posts: Post[]
   comments: Comment[]
   games: Game[]
+  secure: UserSecure
 }

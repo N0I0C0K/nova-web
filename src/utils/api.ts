@@ -67,9 +67,7 @@ export function LoginRequired(
   return async (req, res) => {
     const sess = await getServerSession(req, res, options)
     if (!sess) {
-      res.status(401).json({
-        messgae: 'required login',
-      })
+      res.status(401).redirect('/login')
       return
     }
     return await handler(req, res)

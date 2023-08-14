@@ -26,6 +26,7 @@ async function main() {
         username: val.name,
         password: MD5(`${val.name}123456${salt}`).toString(),
         email: `${val.name}@nova.club`,
+        phone: '17228172929',
         salt: salt,
         user_id: user.id,
       },
