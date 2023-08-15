@@ -268,7 +268,7 @@ const UserManagePage = ({ user }: { user: UserAllInfo }) => {
       gloablBoxProps: {
         p: '0rem',
         h: '100vh',
-        w: '100vw',
+        w: '100%',
       },
     })
     return () => {
