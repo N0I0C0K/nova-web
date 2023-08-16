@@ -18,8 +18,6 @@ export const options: AuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials, req) {
-        console.log(credentials)
-
         const userSecure = await prisma.userSecure.findFirst({
           where: {
             username: credentials?.username,
@@ -41,8 +39,18 @@ export const options: AuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user, account }) {
+      console.log('jwt1', token, user, account)
       if (user) {
         token.id = user.id
+      }
+      if (token.id) {
+        const dbUser = await prisma.user.findFirst({
+          where: {
+            id: token.id!,
+          },
+        })
+        token.name = dbUser?.name
+        console.log('jwt2', token, user, account)
       }
       return token
     },
@@ -50,6 +58,7 @@ export const options: AuthOptions = {
       return {
         ...session,
         id: token.id,
+        name: token.name,
       }
     },
   },
