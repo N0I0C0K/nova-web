@@ -18,20 +18,20 @@ const handler = LoginRequired(
     }
 
     // 是否重命名
-    // try {
-    //   const hasObj = await cos.headObject({
-    //     Bucket: process.env.COS_Bucket!,
-    //     Region: process.env.COS_Region!,
-    //     Key: form.filename,
-    //   })
-    //   if (hasObj.statusCode && hasObj.statusCode === 200) {
-    //     let idx = form.filename.lastIndexOf('.')
-    //     idx = idx === -1 ? form.filename.length : idx
-    //     form.filename = `${form.filename.substring(0, idx)}-0${
-    //       idx !== -1 ? form.filename.substring(idx + 1) : ''
-    //     }`
-    //   }
-    // } catch (error) {}
+    try {
+      const hasObj = await cos.headObject({
+        Bucket: process.env.COS_Bucket!,
+        Region: process.env.COS_Region!,
+        Key: form.filename,
+      })
+      if (hasObj.statusCode && hasObj.statusCode === 200) {
+        let idx = form.filename.lastIndexOf('.')
+        idx = idx === -1 ? form.filename.length : idx
+        form.filename = `${form.filename.substring(0, idx)}-0${
+          idx !== -1 ? form.filename.substring(idx) : ''
+        }`
+      }
+    } catch (error) {}
 
     const url = cos.getObjectUrl(
       {

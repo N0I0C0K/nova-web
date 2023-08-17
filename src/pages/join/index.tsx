@@ -7,12 +7,10 @@ import {
   Heading,
   Input,
   Textarea,
+  Image,
 } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
 import { Formik, Form, Field } from 'formik'
-//import { Image } from '@chakra-ui/next-js'
-import Image from 'next/image'
-import backImg from './back.png'
 
 const JoinPage = () => {
   return (
@@ -25,7 +23,7 @@ const JoinPage = () => {
         className='items-center justify-center'
       >
         <Image
-          src={backImg}
+          src={'https://nova-1257272505.cos.ap-guangzhou.myqcloud.com/Join.png'}
           alt='11'
           style={{
             width: '100%',

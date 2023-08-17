@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Flex,
+  IconButton,
   Spacer,
   useColorMode,
   useToast,
@@ -19,6 +20,7 @@ import EditCode, { SelectionText } from '@/components/EditableCodeTextare'
 import { useAxios } from '@/components/AxiosProvider'
 import { useRouter } from 'next/router'
 import { useGlobalLayoutProps } from '@/components/GlobalHeaderProvider'
+import { RefreshIcon } from '@/components/Icons'
 
 const BlogEditPage: FC<{
   post: ArticleWithContent
@@ -30,11 +32,9 @@ const BlogEditPage: FC<{
   const axios = useAxios()
   const toast = useToast()
   const router = useRouter()
+  const [markdownKey, setMarkdownKey] = useState(0)
   const [layoutProps, setLayoutProps, reset] = useGlobalLayoutProps()
   const textRef = useRef<HTMLTextAreaElement>(null)
-  const textApi = useMemo(() => {
-    return textRef.current ? new SelectionText(textRef.current) : null
-  }, [textRef])
   useEffect(() => {
     setLayoutProps({
       ...layoutProps,
@@ -117,7 +117,6 @@ const BlogEditPage: FC<{
           onDrop={async (event) => {
             event.preventDefault()
             const file = event.dataTransfer.files[0]
-            console.log(file)
             const filereader = new FileReader()
             const getUplaodUrl = await axios.post<{
               url: string
@@ -132,6 +131,9 @@ const BlogEditPage: FC<{
 
             filereader.onload = (e) => {
               if (file.type.startsWith('image')) {
+                const textApi = new SelectionText(textRef.current!)
+                textApi!.insertText(`![${filename}](${fileurl})`)
+                textApi!.notifyChange()
                 axios
                   .put(uploadUrl, e.target?.result, {
                     headers: {
@@ -140,12 +142,8 @@ const BlogEditPage: FC<{
                     timeout: 60 * 1000,
                   })
                   .then((res: any) => {
-                    console.log(res)
+                    setMarkdownKey(markdownKey + 1)
                   })
-                console.log(textApi)
-
-                textApi?.insertText(`![${filename}](${fileurl})`)
-                textApi?.notifyChange()
               } else if (file.type.startsWith('text')) {
                 axios
                   .put(uploadUrl, e.target?.result, {
@@ -186,14 +184,27 @@ const BlogEditPage: FC<{
           px={'2rem'}
           maxH={'100%'}
           w={'50%'}
+          pos={'relative'}
           overflowY={'scroll'}
           overflowX={'hidden'}
           className='border rounded-md'
           ref={showRef}
         >
+          <IconButton
+            aria-label='refrush'
+            pos={'absolute'}
+            top={'1rem'}
+            right={'1rem'}
+            onClick={() => {
+              setMarkdownKey(markdownKey + 1)
+            }}
+          >
+            <RefreshIcon />
+          </IconButton>
           <ReactMarkdown
             components={CustomRenderer()}
             remarkPlugins={[remarkGfm]}
+            key={markdownKey}
           >
             {text}
           </ReactMarkdown>
