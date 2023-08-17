@@ -14,7 +14,7 @@ export const AxiosProvider: FC<{
   const [axios] = useState<AxiosInstance>(() => {
     return Axios.create({
       baseURL: '/api',
-      timeout: 1000,
+      timeout: 10000,
     })
   })
   return <AxiosContext.Provider value={axios}>{children}</AxiosContext.Provider>

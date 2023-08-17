@@ -12,10 +12,10 @@ import {
 } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
 import { getServerSession } from 'next-auth'
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import EditCode from '@/components/EditableCodeTextare'
+import EditCode, { SelectionText } from '@/components/EditableCodeTextare'
 import { useAxios } from '@/components/AxiosProvider'
 import { useRouter } from 'next/router'
 import { useGlobalLayoutProps } from '@/components/GlobalHeaderProvider'
@@ -30,8 +30,11 @@ const BlogEditPage: FC<{
   const axios = useAxios()
   const toast = useToast()
   const router = useRouter()
-  const [layoutProps, setLayoutProps] = useGlobalLayoutProps()
-
+  const [layoutProps, setLayoutProps, reset] = useGlobalLayoutProps()
+  const textRef = useRef<HTMLTextAreaElement>(null)
+  const textApi = useMemo(() => {
+    return textRef.current ? new SelectionText(textRef.current) : null
+  }, [textRef])
   useEffect(() => {
     setLayoutProps({
       ...layoutProps,
@@ -43,9 +46,7 @@ const BlogEditPage: FC<{
       },
     })
     return () => {
-      setLayoutProps({
-        ...layoutProps,
-      })
+      reset()
     }
   }, [])
   return (
@@ -113,9 +114,62 @@ const BlogEditPage: FC<{
             }
           }}
           ref={editerRef}
+          onDrop={async (event) => {
+            event.preventDefault()
+            const file = event.dataTransfer.files[0]
+            console.log(file)
+            const filereader = new FileReader()
+            const getUplaodUrl = await axios.post<{
+              url: string
+              filename: string
+              fileurl: string
+            }>('/cos/uploadUrl', {
+              filename: file.name,
+            })
+
+            const { url: uploadUrl, filename, fileurl } = getUplaodUrl.data
+            console.log(uploadUrl)
+
+            filereader.onload = (e) => {
+              if (file.type.startsWith('image')) {
+                axios
+                  .put(uploadUrl, e.target?.result, {
+                    headers: {
+                      'Content-Type': file.type,
+                    },
+                    timeout: 60 * 1000,
+                  })
+                  .then((res: any) => {
+                    console.log(res)
+                  })
+                console.log(textApi)
+
+                textApi?.insertText(`![${filename}](${fileurl})`)
+                textApi?.notifyChange()
+              } else if (file.type.startsWith('text')) {
+                axios
+                  .put(uploadUrl, e.target?.result, {
+                    headers: {
+                      'Content-Type': file.type,
+                    },
+                  })
+                  .then((res) => {
+                    console.log(res)
+                  })
+              }
+            }
+            filereader.readAsArrayBuffer(file)
+          }}
+          onDragEnd={(ev) => {
+            ev.preventDefault()
+          }}
+          onDragEnter={(ev) => {
+            ev.preventDefault()
+          }}
         >
           <EditCode
             value={text}
+            ref={textRef}
             language='md'
             data-color-mode={mode.colorMode}
             style={{
