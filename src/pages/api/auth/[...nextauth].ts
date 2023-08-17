@@ -39,7 +39,6 @@ export const options: AuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user, account }) {
-      console.log('jwt1', token, user, account)
       if (user) {
         token.id = user.id
       }
@@ -50,7 +49,6 @@ export const options: AuthOptions = {
           },
         })
         token.name = dbUser?.name
-        console.log('jwt2', token, user, account)
       }
       return token
     },
