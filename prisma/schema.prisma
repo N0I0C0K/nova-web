@@ -54,18 +54,42 @@ model PostAddition {
   post      Post? @relation(fields: [post_id], references: [id], onDelete: Cascade)
 }
 
+model Group {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String
+  avatarUrl   String?
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
+  users       User[]
+  games       Game[]
+}
+
 model User {
-  id          String      @id @default(cuid())
-  name        String      @unique
+  id          String           @id @default(cuid())
+  name        String           @unique
   role        String // 职务
   description String
   avatarUrl   String?
   posts       Post[]
   comments    Comment[]
-  createAt    DateTime    @default(now())
-  updateAt    DateTime    @updatedAt
+  createAt    DateTime         @default(now())
+  updateAt    DateTime         @updatedAt
   secure      UserSecure?
   games       Game[]
+  invitations InvitationCode[]
+  group       Group?           @relation(fields: [groupId], references: [id])
+  groupId     Int?
+}
+
+model InvitationCode {
+  id       Int      @id @default(autoincrement())
+  code     String   @unique
+  owner_id String
+  owner    User     @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  user_id  String?
+  updateAt DateTime @updatedAt
+  createAt DateTime @default(now())
 }
 
 model UserSecure {
@@ -77,7 +101,7 @@ model UserSecure {
   username String   @unique
   password String
   salt     String
-  level    Int      @default(0) @db.SmallInt // 0: 普通用户 >= 100: 管理员
+  level    Int      @default(0) @db.SmallInt // 0: 普通用户 >= 100: 管理员 数字越大权限越大
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
 }
@@ -102,6 +126,8 @@ model Game {
   itchUrl     String?
   imgUrl      String[]
   developers  User[]
+  groupId     Int?
+  group       Group?   @relation(fields: [groupId], references: [id])
   createAt    DateTime @default(now())
   updateAt    DateTime @updatedAt
 }

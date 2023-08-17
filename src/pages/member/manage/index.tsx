@@ -66,6 +66,8 @@ export const getServerSideProps: GetServerSideProps<{
       games: true,
       posts: true,
       secure: true,
+      group: true,
+      invitations: true,
     },
   })
   if (!user) {
