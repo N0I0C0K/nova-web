@@ -6,6 +6,11 @@ import {
   Text,
   Avatar,
   IconButton,
+  Menu,
+  MenuList,
+  MenuItem,
+  MenuButton,
+  MenuDivider,
 } from '@chakra-ui/react'
 import { Link } from '@chakra-ui/next-js'
 import { TopSearch } from './TopSearch'
@@ -14,7 +19,13 @@ import { useRouter } from 'next/router'
 import { FC, useMemo } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import { useGlobalLayoutProps } from './GlobalHeaderProvider'
-import { HomeIcon } from './Icons'
+import {
+  DashboardIcon,
+  EditIcon,
+  HomeIcon,
+  LogoutIcon,
+  ProfileIcon,
+} from './Icons'
 
 const SelectLink: FC<{
   href: string
@@ -65,6 +76,58 @@ const LinkList: {
   },
 ]
 
+function UserAvatar() {
+  const sess = useSession()
+  const router = useRouter()
+  return (
+    <>
+      <Menu>
+        <MenuButton>
+          <Avatar
+            size={'sm'}
+            name={sess.data?.user?.name ?? 'unkown'}
+            h={'3em'}
+            w={'3em'}
+          />
+        </MenuButton>
+        <MenuList>
+          <Text fontSize={'xl'} fontWeight={'bold'} px={'.5rem'}>
+            Hello! {sess.data?.user?.name}
+          </Text>
+          <MenuDivider />
+          <MenuItem
+            onClick={() => {
+              router.push(`/member/${sess.data?.user?.name}`)
+            }}
+          >
+            <ProfileIcon mr={'1rem'} fontWeight={'bold'} />
+            <Text fontWeight={'bold'}>个人空间</Text>
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              router.push('/member/manage')
+            }}
+          >
+            <DashboardIcon mr={'1rem'} fontWeight={'bold'} />
+            <Text fontWeight={'bold'}>管理</Text>
+          </MenuItem>
+          <MenuDivider />
+          <MenuItem
+            onClick={() => {
+              signOut()
+            }}
+          >
+            <LogoutIcon mr={'1rem'} fontWeight={'bold'} color={'red.400'} />
+            <Text fontWeight={'bold'} color={'red.400'}>
+              登出
+            </Text>
+          </MenuItem>
+        </MenuList>
+      </Menu>
+    </>
+  )
+}
+
 function TopHeader() {
   const router = useRouter()
   const pathname = useMemo(() => {
@@ -108,16 +171,7 @@ function TopHeader() {
       <Flex gap={1} alignItems={'center'}>
         <TopSearch className='max-w-xs' />
         <ColorModeToggle />
-        {sess.status === 'authenticated' && (
-          <Link href={`/member/${sess.data.user?.name ?? 'unkown'}`}>
-            <Avatar
-              size={'sm'}
-              name={sess.data.user?.name ?? 'unkown'}
-              h={'3em'}
-              w={'3em'}
-            />
-          </Link>
-        )}
+        {sess.status === 'authenticated' && <UserAvatar />}
       </Flex>
     </Flex>
   )
