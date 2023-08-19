@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 
 import { MD5 } from 'crypto-js'
+import { UserRole } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -9,12 +10,12 @@ async function main() {
     {
       name: 'Nick',
       description: 'Hello! this is nick',
-      role: '社长',
+      role: UserRole.Programer,
     },
     {
       name: 'Link',
       description: 'Hello! this is Link',
-      role: 'Gamemes 组员',
+      role: UserRole.Programer,
     },
   ]
 

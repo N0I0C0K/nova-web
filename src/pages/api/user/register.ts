@@ -41,7 +41,6 @@ const handler = PostMethod(RegisterDto, async (req, res, form) => {
     data: {
       name: name,
       description: '',
-      role: '',
       secure: {
         create: {
           password: MD5(`${password}${salt}`).toString(),

@@ -67,10 +67,18 @@ model Group {
   games       Game[]
 }
 
+enum UserRole {
+  User
+  GameDesigner
+  Programer
+  ArtDesigner
+  ModelerDesigner
+}
+
 model User {
   id          String           @id @default(cuid())
   name        String           @unique
-  role        String // 职务
+  role        UserRole         @default(User)
   description String
   avatarUrl   String?
   groupId     Int?
@@ -82,8 +90,17 @@ model User {
   games       Game[]
   invitations InvitationCode[]
   userFiles   UserFile[]
+  space       UserSpace?
   updateAt    DateTime         @updatedAt
   createAt    DateTime         @default(now())
+}
+
+model UserSpace {
+  id               Int      @id @default(autoincrement())
+  backGroundImgUrl String?
+  artUrlList       String[]
+  user_id          String?  @unique
+  user             User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model InvitationCode {
