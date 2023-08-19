@@ -237,6 +237,7 @@ function Tools() {
       right={'1rem'}
       bottom={'1rem'}
       gap={'.5rem'}
+      zIndex={10}
     >
       <IconButton
         aria-label='go home'

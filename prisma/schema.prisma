@@ -61,7 +61,9 @@ model Group {
   avatarUrl   String?
   createAt    DateTime @default(now())
   updateAt    DateTime @updatedAt
-  users       User[]
+  master_id   String?  @unique
+  master      User?    @relation(fields: [master_id], references: [id], onDelete: SetNull, name: "masterGroup")
+  users       User[]   @relation("group")
   games       Game[]
 }
 
@@ -71,15 +73,17 @@ model User {
   role        String // 职务
   description String
   avatarUrl   String?
+  groupId     Int?
+  group       Group?           @relation(fields: [groupId], references: [id], name: "group")
+  masterGroup Group?           @relation("masterGroup")
   posts       Post[]
   comments    Comment[]
-  createAt    DateTime         @default(now())
-  updateAt    DateTime         @updatedAt
   secure      UserSecure?
   games       Game[]
   invitations InvitationCode[]
-  group       Group?           @relation(fields: [groupId], references: [id])
-  groupId     Int?
+  userFiles   UserFile[]
+  updateAt    DateTime         @updatedAt
+  createAt    DateTime         @default(now())
 }
 
 model InvitationCode {
@@ -90,6 +94,15 @@ model InvitationCode {
   user_id  String?
   updateAt DateTime @updatedAt
   createAt DateTime @default(now())
+}
+
+model UserFile {
+  id        Int      @id @default(autoincrement())
+  objectKey String   @unique
+  fileType  String
+  user_id   String?
+  user      User?    @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  createAt  DateTime @default(now())
 }
 
 model UserSecure {

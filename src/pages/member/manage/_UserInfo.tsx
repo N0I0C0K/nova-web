@@ -41,7 +41,6 @@ const UserInfoModifyModal: FC<{
             description: user.description,
           }}
           onSubmit={(val) => {
-            console.log(val)
             axios
               .post('/user/modify', val)
               .then((res) => {

@@ -124,6 +124,7 @@ const BlogEditPage: FC<{
               fileurl: string
             }>('/cos/uploadUrl', {
               filename: file.name,
+              filetype: file.type,
             })
 
             const { url: uploadUrl, filename, fileurl } = getUplaodUrl.data
@@ -226,7 +227,6 @@ export const getServerSideProps: GetServerSideProps<
       notFound: true,
     }
   }
-  console.log(sess)
 
   const { id: user_id } = sess as unknown as { id: string }
   const { slug } = ctx.params!
