@@ -3,6 +3,7 @@ import { IsOptional, IsString, Length } from 'class-validator'
 import { cos } from './_cosHelper'
 import { getToken } from 'next-auth/jwt'
 import { prisma } from '@/db'
+import { RandomStr } from '@/utils/front'
 
 class UploadFileDto {
   @Length(3)
@@ -44,7 +45,7 @@ const handler = LoginRequired(
       if (existFile) {
         let idx = form.filename.lastIndexOf('.')
         idx = idx === -1 ? form.filename.length : idx
-        form.filename = `${form.filename.substring(0, idx)}-0${
+        form.filename = `${form.filename.substring(0, idx)}-${RandomStr(4)}${
           idx !== -1 ? form.filename.substring(idx) : ''
         }`
       }

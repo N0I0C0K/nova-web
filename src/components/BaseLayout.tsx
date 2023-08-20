@@ -26,6 +26,7 @@ import {
   LogoutIcon,
   ProfileIcon,
 } from './Icons'
+import { useUserInfo } from './Providers/UserProvider'
 
 const SelectLink: FC<{
   href: string
@@ -79,12 +80,14 @@ const LinkList: {
 function UserAvatar() {
   const sess = useSession()
   const router = useRouter()
+  const userInfo = useUserInfo()
   return (
     <>
       <Menu>
         <MenuButton>
           <Avatar
             size={'sm'}
+            src={userInfo?.avatarUrl ?? ''}
             name={sess.data?.user?.name ?? 'unkown'}
             h={'3em'}
             w={'3em'}

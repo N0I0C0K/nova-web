@@ -20,7 +20,7 @@ class UserModifyDto {
   @IsOptional()
   description?: string
 
-  @IsPhoneNumber()
+  @IsPhoneNumber('CN')
   @IsOptional()
   phone?: string
 

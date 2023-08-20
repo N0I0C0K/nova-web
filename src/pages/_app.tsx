@@ -8,6 +8,7 @@ import { AxiosProvider } from '@/components/AxiosProvider'
 import { UserProvider } from '@/components/UserInfoProvider'
 import { GlobalLayoutPropsProvider } from '@/components/GlobalHeaderProvider'
 import { AlertProvider } from '@/components/Providers/AlertProvider'
+import { UserInfoProvider } from '@/components/Providers/UserProvider'
 
 export default function App({
   Component,
@@ -20,9 +21,11 @@ export default function App({
           <UserProvider>
             <GlobalLayoutPropsProvider>
               <AlertProvider>
-                <BaseLayout>
-                  <Component {...pageProps} />
-                </BaseLayout>
+                <UserInfoProvider>
+                  <BaseLayout>
+                    <Component {...pageProps} />
+                  </BaseLayout>
+                </UserInfoProvider>
               </AlertProvider>
             </GlobalLayoutPropsProvider>
           </UserProvider>

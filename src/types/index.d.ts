@@ -9,6 +9,7 @@ import type {
   UserSecure,
   Group,
   InvitationCode,
+  UserFile,
 } from '@prisma/client'
 
 export type ArticleProps = Post & {}
@@ -36,5 +37,7 @@ export type UserAllInfo = User & {
   games: Game[]
   secure: UserSecure
   invitations: InvitationCode[]
-  groups?: Group
+  masterGroup?: Group | null
+  group?: Group | null
+  files: UserFile[]
 }

@@ -8,6 +8,7 @@ import {
   Flex,
   IconButton,
   Spacer,
+  Tooltip,
   useColorMode,
   useToast,
 } from '@chakra-ui/react'
@@ -20,12 +21,13 @@ import EditCode, { SelectionText } from '@/components/EditableCodeTextare'
 import { useAxios } from '@/components/AxiosProvider'
 import { useRouter } from 'next/router'
 import { useGlobalLayoutProps } from '@/components/GlobalHeaderProvider'
-import { RefreshIcon } from '@/components/Icons'
+import { CancelIcon, RefreshIcon, SaveIcon } from '@/components/Icons'
+import { UploadFile } from '@/utils/front'
 
 const BlogEditPage: FC<{
-  post: ArticleWithContent
+  post?: ArticleWithContent
 }> = ({ post }) => {
-  const [text, setText] = useState(post.content.content)
+  const [text, setText] = useState(post?.content.content ?? '')
   const editerRef = useRef<HTMLDivElement>(null)
   const showRef = useRef<HTMLDivElement>(null)
   const mode = useColorMode()
@@ -52,43 +54,63 @@ const BlogEditPage: FC<{
   return (
     <Box h={'100%'}>
       <Flex h={'100%'} w='100%' flexDir='row' gap={'.5rem'}>
-        <Flex gap={'.5rem'} flexDir={'column'}>
-          <Button
-            onClick={() => {
-              axios
-                .post('/post/modify', {
-                  postSlug: post.slug,
-                  content: text,
-                  title: post.title,
-                  synopsis: post.synopsis,
-                })
-                .then(({ data, status }) => {
-                  toast({
-                    title: 'Modify success',
-                    status: 'success',
-                    isClosable: true,
-                  })
-                  router.push(`/blog/${post.slug}`)
-                })
-                .catch((err) => {
-                  toast({
-                    title: 'Modify failed',
-                    description: err,
-                    status: 'error',
-                    isClosable: true,
-                  })
-                })
-            }}
-          >
-            保存
-          </Button>
-          <Button
-            onClick={() => {
-              router.back()
-            }}
-          >
-            取消
-          </Button>
+        <Flex
+          gap={'.5rem'}
+          flexDir={'row'}
+          pos={'fixed'}
+          bottom={'1rem'}
+          left={'1rem'}
+          zIndex={1}
+        >
+          <Tooltip label='保存文章'>
+            <IconButton
+              aria-label='save'
+              colorScheme='blue'
+              isRound
+              onClick={() => {
+                if (post) {
+                  axios
+                    .post('/post/modify', {
+                      postSlug: post.slug,
+                      content: text,
+                      title: post.title,
+                      synopsis: post.synopsis,
+                    })
+                    .then(({ data, status }) => {
+                      toast({
+                        title: 'Modify success',
+                        status: 'success',
+                        isClosable: true,
+                      })
+                      router.push(`/blog/${post.slug}`)
+                    })
+                    .catch((err) => {
+                      toast({
+                        title: 'Modify failed',
+                        description: err,
+                        status: 'error',
+                        isClosable: true,
+                      })
+                    })
+                } else {
+                }
+              }}
+            >
+              <SaveIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip label='取消'>
+            <IconButton
+              colorScheme='red'
+              aria-label='cancel'
+              isRound
+              onClick={() => {
+                router.back()
+              }}
+            >
+              <CancelIcon />
+            </IconButton>
+          </Tooltip>
         </Flex>
         <Box
           w={'50%'}
@@ -117,47 +139,12 @@ const BlogEditPage: FC<{
           onDrop={async (event) => {
             event.preventDefault()
             const file = event.dataTransfer.files[0]
-            const filereader = new FileReader()
-            const getUplaodUrl = await axios.post<{
-              url: string
-              filename: string
-              fileurl: string
-            }>('/cos/uploadUrl', {
-              filename: file.name,
-              filetype: file.type,
+            const textApi = new SelectionText(textRef.current!)
+            const { filename, fileurl } = await UploadFile(axios, file, () => {
+              setMarkdownKey(markdownKey + 1)
             })
-
-            const { url: uploadUrl, filename, fileurl } = getUplaodUrl.data
-            console.log(uploadUrl)
-
-            filereader.onload = (e) => {
-              if (file.type.startsWith('image')) {
-                const textApi = new SelectionText(textRef.current!)
-                textApi!.insertText(`![${filename}](${fileurl})`)
-                textApi!.notifyChange()
-                axios
-                  .put(uploadUrl, e.target?.result, {
-                    headers: {
-                      'Content-Type': file.type,
-                    },
-                    timeout: 60 * 1000,
-                  })
-                  .then((res: any) => {
-                    setMarkdownKey(markdownKey + 1)
-                  })
-              } else if (file.type.startsWith('text')) {
-                axios
-                  .put(uploadUrl, e.target?.result, {
-                    headers: {
-                      'Content-Type': file.type,
-                    },
-                  })
-                  .then((res) => {
-                    console.log(res)
-                  })
-              }
-            }
-            filereader.readAsArrayBuffer(file)
+            textApi!.insertText(`![${filename}](${fileurl})`)
+            textApi!.notifyChange()
           }}
           onDragEnd={(ev) => {
             ev.preventDefault()
@@ -172,7 +159,7 @@ const BlogEditPage: FC<{
             language='md'
             data-color-mode={mode.colorMode}
             style={{
-              fontSize: '1rem',
+              fontSize: '1.2rem',
               fontFamily: 'monospace',
               minHeight: '100%',
             }}
@@ -217,7 +204,7 @@ const BlogEditPage: FC<{
 
 export const getServerSideProps: GetServerSideProps<
   {
-    post: ArticleWithContent
+    post?: ArticleWithContent
   },
   { slug: string }
 > = async (ctx) => {
@@ -230,6 +217,11 @@ export const getServerSideProps: GetServerSideProps<
 
   const { id: user_id } = sess as unknown as { id: string }
   const { slug } = ctx.params!
+  if (slug === 'new') {
+    return {
+      props: {},
+    }
+  }
   const post = await prisma.post.findFirst({
     where: {
       slug,

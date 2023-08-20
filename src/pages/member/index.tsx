@@ -20,11 +20,7 @@ const MemberCard: React.FC<MemberProps> = (member) => {
         },
       }}
     >
-      <Avatar
-        name={member.name}
-        src={member.avatarUrl ?? `https://i.pravatar.cc/300?id=${member.name}`}
-        size={'lg'}
-      />
+      <Avatar name={member.name} src={member.avatarUrl ?? ''} size={'lg'} />
       <Flex flexDir={'column'}>
         <Link href={`/member/${member.name}`}>
           <Text fontSize={'2xl'}>{member.name}</Text>

@@ -29,6 +29,7 @@ async function main() {
         email: `${val.name}@nova.club`,
         phone: '17228172929',
         salt: salt,
+        level: 100,
         user_id: user.id,
       },
     })

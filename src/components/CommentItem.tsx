@@ -12,7 +12,7 @@ export const CommentItem: FC<{
       gap={'1rem'}
       pos={'relative'}
     >
-      <Avatar />
+      <Avatar name={comment.author.name} src={comment.author.avatarUrl ?? ''} />
       <Flex flexDir={'column'}>
         <Text color={'gray'}>{comment.author.name}</Text>
         <Text>{comment.content}</Text>

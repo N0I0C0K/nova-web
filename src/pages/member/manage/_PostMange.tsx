@@ -29,10 +29,6 @@ export const PostManage = observer(() => {
       className='border rounded-xl'
       gap={'.5rem'}
     >
-      <Text fontSize={'lg'} fontWeight={'bold'}>
-        文章管理
-      </Text>
-      <Divider />
       <Flex flexDir={'row'}>
         <Button>新建</Button>
       </Flex>

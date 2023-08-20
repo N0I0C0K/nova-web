@@ -20,8 +20,9 @@ import {
 import { Formik, Form } from 'formik'
 import { runInAction } from 'mobx'
 import { observer } from 'mobx-react-lite'
-import { FC, useContext } from 'react'
+import { FC, useContext, useRef } from 'react'
 import { UserContext } from './_UserAllInfoContext'
+import { UploadFile } from '@/utils/front'
 
 const UserInfoModifyModal: FC<{
   open: boolean
@@ -39,6 +40,7 @@ const UserInfoModifyModal: FC<{
           initialValues={{
             name: user.name,
             description: user.description,
+            phone: user.secure.phone,
           }}
           onSubmit={(val) => {
             axios
@@ -52,6 +54,7 @@ const UserInfoModifyModal: FC<{
                 runInAction(() => {
                   user.name = val.name
                   user.description = val.description
+                  user.secure.phone = val.phone
                 })
 
                 onClose()
@@ -86,7 +89,16 @@ const UserInfoModifyModal: FC<{
                   onBlur={handleBlur}
                 />
               </FormControl>
-              <Button mt={'2rem'} type='submit'>
+              <FormControl>
+                <FormLabel>Phone:</FormLabel>
+                <Input
+                  name='phone'
+                  value={values.phone ?? ''}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+              </FormControl>
+              <Button mt={'2rem'} type='submit' colorScheme='blue'>
                 Save
               </Button>
             </Form>
@@ -99,7 +111,9 @@ const UserInfoModifyModal: FC<{
 
 export const UserInfo = observer(() => {
   const user = useContext(UserContext)
+  const fileSelect = useRef<HTMLInputElement>(null)
   const [open, setOpen] = useBoolean(false)
+  const axios = useAxios()
   return (
     <Flex
       flexDir={'row'}
@@ -115,7 +129,37 @@ export const UserInfo = observer(() => {
       }}
       className='border rounded-xl items-center'
     >
-      <Avatar name={user.name} size={'lg'} />
+      <Input
+        ref={fileSelect}
+        type='file'
+        display={'none'}
+        accept='.jpg,.jpeg,.png'
+        onChange={async (event) => {
+          if (!event.target.files || event.target.files.length === 0) {
+            return
+          }
+          const file = event.target.files[0]
+          if (!file.type.startsWith('image')) {
+            return
+          }
+          const { fileurl } = await UploadFile(axios, file, () => {
+            axios.post('/user/modify', { avatarUrl: fileurl }).then(() => {
+              runInAction(() => {
+                user.avatarUrl = fileurl
+              })
+            })
+          })
+        }}
+      />
+      <Avatar
+        name={user.name}
+        src={user.avatarUrl ?? ''}
+        size={'lg'}
+        className='cursor-pointer'
+        onClick={() => {
+          fileSelect.current?.click()
+        }}
+      />
       <Flex flexDir={'column'}>
         <Text fontSize={'lg'} fontWeight={'bold'}>
           {user.name} ({user.secure.username})

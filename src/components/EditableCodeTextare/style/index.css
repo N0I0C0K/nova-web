@@ -58,7 +58,7 @@ body[data-color-mode*='light'] {
 }
 .w-tc-editor {
   font-family: inherit;
-  font-size: 12px;
+  font-size: inherit;
   background-color: var(--color-canvas-subtle);
   color: var(--color-fg-default);
 }

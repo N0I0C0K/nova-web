@@ -89,7 +89,7 @@ model User {
   secure      UserSecure?
   games       Game[]
   invitations InvitationCode[]
-  userFiles   UserFile[]
+  files       UserFile[]
   space       UserSpace?
   updateAt    DateTime         @updatedAt
   createAt    DateTime         @default(now())
