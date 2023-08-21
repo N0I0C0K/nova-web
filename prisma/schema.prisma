@@ -23,7 +23,7 @@ model Comment {
 model Post {
   id       Int           @id @default(autoincrement())
   slug     String        @unique @default(cuid())
-  title    String
+  title    String        @unique
   synopsis String
   badges   String[]
   createAt DateTime      @default(now())

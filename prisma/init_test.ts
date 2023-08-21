@@ -20,10 +20,20 @@ async function main() {
   ]
 
   t_user.every(async (val) => {
-    const user = await prisma.user.create({ data: val })
+    const user = await prisma.user.upsert({
+      where: {
+        name: val.name,
+      },
+      create: val,
+      update: val,
+    })
     const salt = MD5(`${val.name}`).toString()
-    const secure = await prisma.userSecure.create({
-      data: {
+    const secure = await prisma.userSecure.upsert({
+      where: {
+        username: val.name,
+      },
+      update: {},
+      create: {
         username: val.name,
         password: MD5(`${val.name}123456${salt}`).toString(),
         email: `${val.name}@nova.club`,
@@ -34,13 +44,18 @@ async function main() {
       },
     })
     for (let i = 0; i <= 10; ++i) {
-      const blog = await prisma.post.create({
-        data: {
-          synopsis: `${user.name}'s test synopsis`,
-          title: `${user.name}'s ${i} Blog`,
-          user_id: user.id,
-          badges: i % 3 === 0 ? ['game', 'c++'] : ['python', 'art'],
+      const blogVal = {
+        synopsis: `${user.name}'s test synopsis`,
+        title: `${user.name}'s ${i} Blog`,
+        user_id: user.id,
+        badges: i % 3 === 0 ? ['game', 'c++'] : ['python', 'art'],
+      }
+      const blog = await prisma.post.upsert({
+        where: {
+          title: blogVal.title,
         },
+        create: blogVal,
+        update: {},
       })
       let md = `# ${blog.title}
 Hello This is ${user.name}'s ${i} title
