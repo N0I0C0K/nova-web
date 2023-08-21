@@ -50,11 +50,13 @@ export const PostManage = observer(() => {
         .map((val) => (
           <Flex
             key={val.id}
-            className='rounded-md items-center duration-300 hover:shadow-lg hover:scale-105'
+            className='rounded-md items-center duration-300 hover:shadow-lg hover:translate-x-1'
             p={'.5rem'}
             gap={'.5rem'}
           >
-            <Text fontWeight={'bold'}>{val.title}</Text>
+            <Tooltip label={val.synopsis}>
+              <Text fontWeight={'bold'}>{val.title}</Text>
+            </Tooltip>
             {val.badges.map((val) => (
               <Badge key={val} colorScheme='green'>
                 {val}
