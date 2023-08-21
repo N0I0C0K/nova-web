@@ -24,6 +24,7 @@ export const BlogItem = ({
     <Box
       className='rounded-lg p-10 shadow-md duration-300 hover:shadow-lg hover:scale-105'
       minW={'50rem'}
+      maxW={'50rem'}
       pos={'relative'}
       sx={{
         _light: {

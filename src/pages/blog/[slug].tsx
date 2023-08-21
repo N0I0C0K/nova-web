@@ -140,7 +140,7 @@ const ArticlePage: FC<{
           </Flex>
           <Spacer />
           <Flex gap={'1rem'}>
-            <Avatar />
+            <Avatar name={post.author.name} src={post.author.avatarUrl ?? ''} />
             <Flex flexDir={'column'}>
               <Text fontWeight={'bold'}>{post.author.name}</Text>
               <Text color={'gray'}>{post.createAt.toLocaleString()}</Text>
@@ -148,7 +148,7 @@ const ArticlePage: FC<{
           </Flex>
         </Flex>
         <Divider />
-        <Box>
+        <Box minH={'20rem'}>
           <ReactMarkdown
             components={CustomRenderer()}
             remarkPlugins={[remarkGfm]}

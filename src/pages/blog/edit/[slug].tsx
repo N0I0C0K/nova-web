@@ -6,7 +6,16 @@ import {
   Box,
   Button,
   Flex,
+  FormControl,
+  FormLabel,
   IconButton,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Spacer,
   Tooltip,
   useColorMode,
@@ -23,6 +32,12 @@ import { useRouter } from 'next/router'
 import { useGlobalLayoutProps } from '@/components/GlobalHeaderProvider'
 import { CancelIcon, RefreshIcon, SaveIcon } from '@/components/Icons'
 import { UploadFile } from '@/utils/front'
+import { Form, Formik } from 'formik'
+import { Post } from '@prisma/client'
+
+const SaveMoadl: FC<{}> = () => {
+  return <></>
+}
 
 const BlogEditPage: FC<{
   post?: ArticleWithContent
@@ -37,6 +52,7 @@ const BlogEditPage: FC<{
   const [markdownKey, setMarkdownKey] = useState(0)
   const [layoutProps, setLayoutProps, reset] = useGlobalLayoutProps()
   const textRef = useRef<HTMLTextAreaElement>(null)
+  const [open, setOpen] = useState(false)
   useEffect(() => {
     setLayoutProps({
       ...layoutProps,
@@ -68,32 +84,7 @@ const BlogEditPage: FC<{
               colorScheme='blue'
               isRound
               onClick={() => {
-                if (post) {
-                  axios
-                    .post('/post/modify', {
-                      postSlug: post.slug,
-                      content: text,
-                      title: post.title,
-                      synopsis: post.synopsis,
-                    })
-                    .then(({ data, status }) => {
-                      toast({
-                        title: 'Modify success',
-                        status: 'success',
-                        isClosable: true,
-                      })
-                      router.push(`/blog/${post.slug}`)
-                    })
-                    .catch((err) => {
-                      toast({
-                        title: 'Modify failed',
-                        description: err,
-                        status: 'error',
-                        isClosable: true,
-                      })
-                    })
-                } else {
-                }
+                setOpen(true)
               }}
             >
               <SaveIcon />
@@ -158,9 +149,10 @@ const BlogEditPage: FC<{
             ref={textRef}
             language='md'
             data-color-mode={mode.colorMode}
+            padding={20}
             style={{
-              fontSize: '1.2rem',
-              fontFamily: 'monospace',
+              fontSize: '1rem',
+              fontFamily: 'inherit',
               minHeight: '100%',
             }}
             onChange={(e) => {
@@ -198,6 +190,118 @@ const BlogEditPage: FC<{
           </ReactMarkdown>
         </Box>
       </Flex>
+      <Modal
+        isOpen={open}
+        onClose={() => {
+          setOpen(false)
+        }}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>设置文章属性</ModalHeader>
+          <ModalBody>
+            <Formik
+              initialValues={{
+                title: post?.title ?? '',
+                synopsis: post?.synopsis ?? '',
+                bages: post?.badges ?? [],
+              }}
+              onSubmit={(val) => {
+                console.log(val)
+                if (post) {
+                  axios
+                    .post('/post/modify', {
+                      postSlug: post.slug,
+                      content: text,
+                      title: val.title,
+                      synopsis: val.synopsis,
+                    })
+                    .then(({ data, status }) => {
+                      toast({
+                        title: 'Modify success',
+                        status: 'success',
+                        isClosable: true,
+                      })
+                      router.push(`/blog/${post.slug}`)
+                      toast({
+                        title: 'Modify success',
+                        status: 'success',
+                        isClosable: true,
+                      })
+                    })
+                    .catch((err) => {
+                      toast({
+                        title: 'Modify failed',
+                        description: err,
+                        status: 'error',
+                        isClosable: true,
+                      })
+                    })
+                } else {
+                  axios
+                    .post<Post>('/post/new', {
+                      title: val.title,
+                      synopsis: val.synopsis,
+                      content: text,
+                    })
+                    .then(({ data }) => {
+                      console.log(data)
+                      router.push(`/blog/${data.slug}`)
+                    })
+                    .catch((err) => {
+                      toast({
+                        title: 'Create failed',
+                        description: err,
+                        status: 'error',
+                        isClosable: true,
+                      })
+                    })
+                }
+              }}
+            >
+              {({ values, handleBlur, handleChange, handleSubmit }) => {
+                return (
+                  <Form onSubmit={handleSubmit}>
+                    <Flex flexDir={'column'} gap={'1rem'}>
+                      <FormControl>
+                        <FormLabel>标题</FormLabel>
+                        <Input
+                          name='title'
+                          value={values.title}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                        />
+                      </FormControl>
+                      <FormControl>
+                        <FormLabel>简介</FormLabel>
+                        <Input
+                          name='synopsis'
+                          value={values.synopsis}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                        />
+                      </FormControl>
+                      <Flex gap={'.5rem'}>
+                        <Spacer />
+                        <Button colorScheme='blue' type='submit'>
+                          提交
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            setOpen(false)
+                          }}
+                        >
+                          取消
+                        </Button>
+                      </Flex>
+                    </Flex>
+                  </Form>
+                )
+              }}
+            </Formik>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Box>
   )
 }

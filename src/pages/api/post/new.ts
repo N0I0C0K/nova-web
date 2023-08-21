@@ -1,17 +1,25 @@
 import { prisma } from '@/db'
 import { LoginRequired, PostMethod } from '@/utils/api'
-import { IsString } from 'class-validator'
+import { IsArray, IsOptional, IsString, Length } from 'class-validator'
 import { getToken } from 'next-auth/jwt'
 
 class NewPostDto {
+  @Length(3)
   @IsString()
   content!: string
 
+  @Length(3, 50)
   @IsString()
   title!: string
 
+  @Length(3, 50)
   @IsString()
   synopsis!: string
+
+  @IsString({ each: true })
+  @IsArray()
+  @IsOptional()
+  bages?: string[]
 }
 
 const handler = LoginRequired(
@@ -23,19 +31,18 @@ const handler = LoginRequired(
         synopsis: form.synopsis,
         title: form.title,
         user_id: user_id,
+        badges: form.bages?.map((val) => val.toLowerCase()) ?? undefined,
+        content: {
+          create: {
+            content: form.content,
+          },
+        },
+        addition: {
+          create: {},
+        },
       },
     })
-    const postContent = await prisma.postContent.create({
-      data: {
-        content: form.content,
-        post_id: post.id,
-      },
-    })
-    const addition = await prisma.postAddition.create({
-      data: {
-        post_id: post.id,
-      },
-    })
+    return res.status(200).json(post)
   })
 )
 

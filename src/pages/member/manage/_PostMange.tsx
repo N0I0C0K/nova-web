@@ -15,6 +15,7 @@ import { observer } from 'mobx-react-lite'
 import { useContext } from 'react'
 import { UserContext } from './_UserAllInfoContext'
 import { Link } from '@chakra-ui/next-js'
+import { useRouter } from 'next/router'
 
 export const PostManage = observer(() => {
   const user = useContext(UserContext)
@@ -22,6 +23,7 @@ export const PostManage = observer(() => {
   const alert = useAlert()
   const axios = useAxios()
   const toast = useToast()
+  const router = useRouter()
   return (
     <Flex
       flexDir={'column'}
@@ -30,7 +32,14 @@ export const PostManage = observer(() => {
       gap={'.5rem'}
     >
       <Flex flexDir={'row'}>
-        <Button>新建</Button>
+        <Button
+          colorScheme='green'
+          onClick={() => {
+            router.push('/blog/edit/new')
+          }}
+        >
+          新建
+        </Button>
       </Flex>
       <Divider />
       {user.posts

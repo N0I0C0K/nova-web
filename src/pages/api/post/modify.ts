@@ -1,16 +1,19 @@
 import { LoginRequired, PostMethod } from '@/utils/api'
-import { IsString } from 'class-validator'
+import { IsString, Length } from 'class-validator'
 import { getToken } from 'next-auth/jwt'
 import { CustomToken } from '../auth/[...nextauth]'
 import { prisma } from '@/db'
 
 class ModifyDto {
+  @Length(3)
   @IsString()
   content!: string
 
+  @Length(3, 50)
   @IsString()
   title!: string
 
+  @Length(3, 50)
   @IsString()
   synopsis!: string
 
