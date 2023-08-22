@@ -223,11 +223,6 @@ const BlogEditPage: FC<{
                         isClosable: true,
                       })
                       router.push(`/blog/${post.slug}`)
-                      toast({
-                        title: 'Modify success',
-                        status: 'success',
-                        isClosable: true,
-                      })
                     })
                     .catch((err) => {
                       toast({

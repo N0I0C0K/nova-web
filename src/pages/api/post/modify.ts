@@ -60,13 +60,8 @@ const handler = LoginRequired(
       where: {
         id: post.id,
       },
-      include: {
-        author: true,
-        content: true,
-      },
     })
     res.status(200).json(post_modified)
-    return
   })
 )
 
