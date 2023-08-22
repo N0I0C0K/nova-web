@@ -41,3 +41,5 @@ export type UserAllInfo = User & {
   group?: Group | null
   files: UserFile[]
 }
+
+export type MemberFile = UserFile

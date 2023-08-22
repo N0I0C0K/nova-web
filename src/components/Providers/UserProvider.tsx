@@ -1,17 +1,17 @@
-import { User } from '@prisma/client'
 import { useSession } from 'next-auth/react'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useAxios } from '../AxiosProvider'
+import { MemberProps } from '@/types'
 
-const UserContext = createContext<User | undefined>({} as unknown as any)
+const UserContext = createContext<MemberProps | undefined>({} as unknown as any)
 
 export function UserInfoProvider({ children }: { children: React.ReactNode }) {
   const sess = useSession()
   const axios = useAxios()
-  const [usserinfo, setUser] = useState<User>()
+  const [usserinfo, setUser] = useState<MemberProps>()
   useEffect(() => {
     axios
-      .get<User>('/user/info')
+      .get<MemberProps>('/user/info')
       .then((res) => {
         console.log('update user info')
         setUser(res.data)

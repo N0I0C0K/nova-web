@@ -19,6 +19,8 @@ import { UserContext } from './_UserAllInfoContext'
 import { PostManage } from './_PostMange'
 import { UserInfo } from './_UserInfo'
 import { GroupManage } from './_GroupManage'
+import { FileManage } from './_FileManage'
+import { InviteManage } from './_InviteManage'
 
 const CustomTabPanel = chakra(TabPanel, {
   baseStyle: {
@@ -47,6 +49,13 @@ function ToolsTab() {
         </CustomTabPanel>
         <CustomTabPanel>
           <GroupManage />
+        </CustomTabPanel>
+        <CustomTabPanel>游戏管理</CustomTabPanel>
+        <CustomTabPanel>
+          <FileManage />
+        </CustomTabPanel>
+        <CustomTabPanel>
+          <InviteManage />
         </CustomTabPanel>
       </TabPanels>
     </Tabs>

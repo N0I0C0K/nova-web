@@ -1,7 +1,7 @@
 import CustomRenderer from '@/components/markdown/CustomRenderer'
 import { prisma } from '@/db'
 import { options } from '@/pages/api/auth/[...nextauth]'
-import { ArticleWithContent } from '@/types'
+import { ArticleProps, ArticleWithContent } from '@/types'
 import {
   Box,
   Button,
@@ -33,11 +33,6 @@ import { useGlobalLayoutProps } from '@/components/GlobalHeaderProvider'
 import { CancelIcon, RefreshIcon, SaveIcon } from '@/components/Icons'
 import { UploadFile } from '@/utils/front'
 import { Form, Formik } from 'formik'
-import { Post } from '@prisma/client'
-
-const SaveMoadl: FC<{}> = () => {
-  return <></>
-}
 
 const BlogEditPage: FC<{
   post?: ArticleWithContent
@@ -234,7 +229,7 @@ const BlogEditPage: FC<{
                     })
                 } else {
                   axios
-                    .post<Post>('/post/new', {
+                    .post<ArticleProps>('/post/new', {
                       title: val.title,
                       synopsis: val.synopsis,
                       content: text,

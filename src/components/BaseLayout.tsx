@@ -103,16 +103,16 @@ function UserAvatar() {
               router.push(`/member/${sess.data?.user?.name}`)
             }}
           >
-            <ProfileIcon mr={'1rem'} fontWeight={'bold'} />
-            <Text fontWeight={'bold'}>个人空间</Text>
+            <ProfileIcon mr={'1rem'} />
+            <Text>个人空间</Text>
           </MenuItem>
           <MenuItem
             onClick={() => {
               router.push('/member/manage')
             }}
           >
-            <DashboardIcon mr={'1rem'} fontWeight={'bold'} />
-            <Text fontWeight={'bold'}>管理</Text>
+            <DashboardIcon mr={'1rem'} />
+            <Text>管理</Text>
           </MenuItem>
           <MenuDivider />
           <MenuItem
@@ -120,10 +120,8 @@ function UserAvatar() {
               signOut()
             }}
           >
-            <LogoutIcon mr={'1rem'} fontWeight={'bold'} color={'red.400'} />
-            <Text fontWeight={'bold'} color={'red.400'}>
-              登出
-            </Text>
+            <LogoutIcon mr={'1rem'} color={'red.400'} />
+            <Text color={'red.400'}>登出</Text>
           </MenuItem>
         </MenuList>
       </Menu>
