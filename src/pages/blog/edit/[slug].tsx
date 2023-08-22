@@ -222,7 +222,7 @@ const BlogEditPage: FC<{
                     .catch((err) => {
                       toast({
                         title: 'Modify failed',
-                        description: err,
+                        description: err.message,
                         status: 'error',
                         isClosable: true,
                       })
@@ -241,7 +241,7 @@ const BlogEditPage: FC<{
                     .catch((err) => {
                       toast({
                         title: 'Create failed',
-                        description: err,
+                        description: err.message,
                         status: 'error',
                         isClosable: true,
                       })

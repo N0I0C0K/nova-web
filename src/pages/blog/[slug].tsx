@@ -87,7 +87,7 @@ const ArticleTools: FC<{
                       title: '删除成功',
                       status: 'success',
                     })
-                    router.push('/blog')
+                    router.back()
                   })
                   .catch((e) => {
                     toast({

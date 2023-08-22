@@ -1,9 +1,14 @@
 import { FC, useContext } from 'react'
 import { UserContext } from './_UserAllInfoContext'
-import { Button, Divider, Flex, Text } from '@chakra-ui/react'
+import { Button, Divider, Flex, Text, Toast } from '@chakra-ui/react'
+import { useAxios } from '@/components/AxiosProvider'
+import { InviteCode } from '@/types'
+import { runInAction } from 'mobx'
+import { observer } from 'mobx-react-lite'
 
-export function InviteManage() {
+export const InviteManage = observer(() => {
   const user = useContext(UserContext)
+  const axios = useAxios()
   return (
     <Flex
       flexDir={'column'}
@@ -12,10 +17,27 @@ export function InviteManage() {
       gap={'.5rem'}
     >
       <Flex>
-        <Button>新建</Button>
+        <Button
+          onClick={() => {
+            axios
+              .post<InviteCode>('user/createInvitationCode')
+              .then(({ data }) => {
+                runInAction(() => {
+                  user.invitations.push(data)
+                })
+                Toast({
+                  title: '创建成功',
+                  status: 'success',
+                  isClosable: true,
+                })
+              })
+          }}
+        >
+          新建
+        </Button>
       </Flex>
       <Divider />
-      <Flex>
+      <Flex flexDirection={'column'} gap={'.5rem'}>
         {user.invitations.map((val) => (
           <Flex key={val.id}>
             <Text fontWeight={'bold'}>{val.code}</Text>
@@ -24,4 +46,4 @@ export function InviteManage() {
       </Flex>
     </Flex>
   )
-}
+})

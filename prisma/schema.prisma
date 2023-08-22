@@ -76,23 +76,24 @@ enum UserRole {
 }
 
 model User {
-  id          String           @id @default(cuid())
-  name        String           @unique
-  role        UserRole         @default(User)
-  description String
-  avatarUrl   String?
-  groupId     Int?
-  group       Group?           @relation(fields: [groupId], references: [id], name: "group")
-  masterGroup Group?           @relation("masterGroup")
-  posts       Post[]
-  comments    Comment[]
-  secure      UserSecure?
-  games       Game[]
-  invitations InvitationCode[]
-  files       UserFile[]
-  space       UserSpace?
-  updateAt    DateTime         @updatedAt
-  createAt    DateTime         @default(now())
+  id             String           @id @default(cuid())
+  name           String           @unique
+  role           UserRole         @default(User)
+  description    String
+  avatarUrl      String?
+  groupId        Int?
+  group          Group?           @relation(fields: [groupId], references: [id], name: "group")
+  masterGroup    Group?           @relation("masterGroup")
+  posts          Post[]
+  comments       Comment[]
+  secure         UserSecure?
+  games          Game[]
+  invitations    InvitationCode[] @relation("invitations")
+  fromInvitation InvitationCode?  @relation("fromInvitation")
+  files          UserFile[]
+  space          UserSpace?
+  updateAt       DateTime         @updatedAt
+  createAt       DateTime         @default(now())
 }
 
 model UserSpace {
@@ -107,8 +108,9 @@ model InvitationCode {
   id       Int      @id @default(autoincrement())
   code     String   @unique
   owner_id String
-  owner    User     @relation(fields: [owner_id], references: [id], onDelete: Cascade)
-  user_id  String?
+  owner    User     @relation(fields: [owner_id], references: [id], onDelete: SetDefault, name: "invitations")
+  user_id  String?  @unique
+  user     User?    @relation(fields: [user_id], references: [id], onDelete: SetNull, name: "fromInvitation")
   updateAt DateTime @updatedAt
   createAt DateTime @default(now())
 }

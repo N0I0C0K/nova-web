@@ -8,9 +8,11 @@ class RegisterDto {
   @IsString()
   inviteCode!: string
 
+  @Length(3)
   @IsString()
   name!: string
 
+  @Length(8)
   @IsString()
   password!: string
 
@@ -34,6 +36,16 @@ const handler = PostMethod(RegisterDto, async (req, res, form) => {
   if (invite.user_id) {
     return res.status(400).json({
       message: '邀请码已使用',
+    })
+  }
+  const findUser = await prisma.userSecure.findUnique({
+    where: {
+      username: name,
+    },
+  })
+  if (findUser) {
+    return res.status(400).json({
+      message: '用户名已存在',
     })
   }
   const salt = MD5(name).toString()

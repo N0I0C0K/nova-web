@@ -50,7 +50,7 @@ export function PostMethod<T extends object>(
     const err = await validate(form)
     if (err && err.length > 0) {
       res.status(405).json({
-        message: 'invaild form data',
+        message: err[0].toString(),
       })
       return
     }
