@@ -58,7 +58,7 @@ export const InviteManage = observer(() => {
               gap={'.5rem'}
               className={`${
                 idx < user.invitations.length - 1 ? 'border-b' : ''
-              }`}
+              } p-1 rounded-md duration-300 hover:shadow-md hover:translate-x-1`}
             >
               <Text
                 fontWeight={'bold'}
