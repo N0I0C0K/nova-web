@@ -119,7 +119,11 @@ export const getServerSideProps: GetServerSideProps<{
       posts: true,
       secure: true,
       group: true,
-      invitations: true,
+      invitations: {
+        include: {
+          user: true,
+        },
+      },
       files: true,
       masterGroup: true,
     },

@@ -36,7 +36,9 @@ export type UserAllInfo = User & {
   comments: Comment[]
   games: Game[]
   secure: UserSecure
-  invitations: InvitationCode[]
+  invitations: (InvitationCode & {
+    user?: User | null
+  })[]
   masterGroup?: Group | null
   group?: Group | null
   files: UserFile[]
