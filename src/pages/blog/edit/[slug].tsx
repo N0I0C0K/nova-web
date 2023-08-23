@@ -12,12 +12,14 @@ import {
   Input,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
   Spacer,
   Tooltip,
+  useBoolean,
   useColorMode,
   useToast,
 } from '@chakra-ui/react'
@@ -30,9 +32,30 @@ import EditCode, { SelectionText } from '@/components/EditableCodeTextare'
 import { useAxios } from '@/components/AxiosProvider'
 import { useRouter } from 'next/router'
 import { useGlobalLayoutProps } from '@/components/GlobalHeaderProvider'
-import { CancelIcon, RefreshIcon, SaveIcon } from '@/components/Icons'
+import { CancelIcon, InfoIcon, RefreshIcon, SaveIcon } from '@/components/Icons'
 import { UploadFile } from '@/utils/front'
 import { Form, Formik } from 'formik'
+import { HelpMarkDownText } from './_help'
+
+function HelpModal({ open, onClose }: { open: boolean; onClose: () => any }) {
+  return (
+    <Modal isOpen={open} onClose={onClose} scrollBehavior='inside' size={'xl'}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Markdown 语法</ModalHeader>
+        <ModalBody>
+          <ReactMarkdown
+            components={CustomRenderer()}
+            remarkPlugins={[remarkGfm]}
+          >
+            {HelpMarkDownText}
+          </ReactMarkdown>
+        </ModalBody>
+        <ModalCloseButton />
+      </ModalContent>
+    </Modal>
+  )
+}
 
 const BlogEditPage: FC<{
   post?: ArticleWithContent
@@ -48,6 +71,7 @@ const BlogEditPage: FC<{
   const [layoutProps, setLayoutProps, reset] = useGlobalLayoutProps()
   const textRef = useRef<HTMLTextAreaElement>(null)
   const [open, setOpen] = useState(false)
+  const [helpOpen, help] = useBoolean()
   useEffect(() => {
     setLayoutProps({
       ...layoutProps,
@@ -64,7 +88,7 @@ const BlogEditPage: FC<{
   }, [])
   return (
     <Box h={'100%'}>
-      <Flex h={'100%'} w='100%' flexDir='row' gap={'.5rem'}>
+      <Flex h={'100%'} w='100%' flexDir='row' gap={'.5rem'} pb={'2rem'}>
         <Flex
           gap={'.5rem'}
           flexDir={'row'}
@@ -95,6 +119,11 @@ const BlogEditPage: FC<{
               }}
             >
               <CancelIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip label='帮助'>
+            <IconButton aria-label='help' isRound onClick={help.on}>
+              <InfoIcon />
             </IconButton>
           </Tooltip>
         </Flex>
@@ -147,8 +176,12 @@ const BlogEditPage: FC<{
             padding={20}
             style={{
               fontSize: '1rem',
-              fontFamily: 'inherit',
+              fontFamily:
+                'ui-monospace,"SFMono-Regular","SF Mono","Menlo","Consolas","Liberation Mono",monospace',
               minHeight: '100%',
+            }}
+            onPaste={(e) => {
+              console.log(e)
             }}
             onChange={(e) => {
               setText(e.target.value)
@@ -292,6 +325,7 @@ const BlogEditPage: FC<{
           </ModalBody>
         </ModalContent>
       </Modal>
+      <HelpModal open={helpOpen} onClose={help.off} />
     </Box>
   )
 }

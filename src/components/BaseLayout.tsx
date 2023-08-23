@@ -11,6 +11,7 @@ import {
   MenuItem,
   MenuButton,
   MenuDivider,
+  Tooltip,
 } from '@chakra-ui/react'
 import { Link } from '@chakra-ui/next-js'
 import { TopSearch } from './TopSearch'
@@ -240,14 +241,16 @@ function Tools() {
       gap={'.5rem'}
       zIndex={10}
     >
-      <IconButton
-        aria-label='go home'
-        onClick={() => {
-          router.push('/')
-        }}
-      >
-        <HomeIcon />
-      </IconButton>
+      <Tooltip label='返回主页'>
+        <IconButton
+          aria-label='go home'
+          onClick={() => {
+            router.push('/')
+          }}
+        >
+          <HomeIcon />
+        </IconButton>
+      </Tooltip>
       <ColorModeToggle />
     </Flex>
   )

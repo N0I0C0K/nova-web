@@ -180,7 +180,7 @@ const ArticlePage: FC<{
             @{post.author.name}
           </Link>
           <Text color={'gray'} fontSize={'sm'}>
-            最后编剧于{post.updateAt.toLocaleString()}
+            最后编辑于{post.updateAt.toLocaleString()}
           </Text>
           <Text color={'gray'} fontSize={'sm'}>
             浏览{post.addition.viewCount}次

@@ -118,7 +118,7 @@ export const defaults: Defaults = {
     return <Text as='del'>{children}</Text>
   },
   hr: (props) => {
-    return <Divider />
+    return <Divider my={'1rem'} />
   },
   a: (props) => <Link {...props} color='blue.400' />,
   img: (props) => {
