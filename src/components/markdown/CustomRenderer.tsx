@@ -85,6 +85,7 @@ export const defaults: Defaults = {
         </Code>
       )
     }
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const mode = useColorMode()
     return (
       <Box pos={'relative'} className='group'>

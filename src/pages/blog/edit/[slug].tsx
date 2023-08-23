@@ -35,7 +35,7 @@ import { useGlobalLayoutProps } from '@/components/GlobalHeaderProvider'
 import { CancelIcon, InfoIcon, RefreshIcon, SaveIcon } from '@/components/Icons'
 import { UploadFile } from '@/utils/front'
 import { Form, Formik } from 'formik'
-import { HelpMarkDownText } from './_help'
+import { HelpMarkDownText } from '@/page-components/edit/_help'
 
 function HelpModal({ open, onClose }: { open: boolean; onClose: () => any }) {
   return (

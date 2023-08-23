@@ -15,12 +15,12 @@ import { GetServerSideProps } from 'next'
 import { getToken } from 'next-auth/jwt'
 import { useEffect } from 'react'
 import { observable } from 'mobx'
-import { UserContext } from './_UserAllInfoContext'
-import { PostManage } from './_PostMange'
-import { UserInfo } from './_UserInfo'
-import { GroupManage } from './_GroupManage'
-import { FileManage } from './_FileManage'
-import { InviteManage } from './_InviteManage'
+import { UserContext } from '@/page-components/user-manage/_UserAllInfoContext'
+import { PostManage } from '@/page-components/user-manage/_PostMange'
+import { UserInfo } from '@/page-components/user-manage/_UserInfo'
+import { GroupManage } from '@/page-components/user-manage/_GroupManage'
+import { FileManage } from '@/page-components/user-manage/_FileManage'
+import { InviteManage } from '@/page-components/user-manage/_InviteManage'
 
 const CustomTabPanel = chakra(TabPanel, {
   baseStyle: {
