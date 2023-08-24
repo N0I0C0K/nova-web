@@ -54,7 +54,7 @@ export function PostMethod<T extends object>(
       })
       return
     }
-    return await handler(req, res, form)
+    await handler(req, res, form)
   }
 }
 
@@ -70,6 +70,6 @@ export function LoginRequired(
       res.status(401).redirect('/login')
       return
     }
-    return await handler(req, res)
+    await handler(req, res)
   }
 }

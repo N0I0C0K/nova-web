@@ -160,6 +160,8 @@ async function main() {
       await production_seed()
       break
     default:
+      console.log('init database with [development] seed')
+      await development_seed()
       break
   }
 }

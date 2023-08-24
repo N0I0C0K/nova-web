@@ -42,7 +42,7 @@ const handler = LoginRequired(
         },
       },
     })
-    return res.status(200).json(post)
+    res.status(200).json(post)
   })
 )
 

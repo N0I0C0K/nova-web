@@ -11,6 +11,7 @@ import {
   EditablePreview,
   Flex,
   Heading,
+  Input,
   List,
   ListItem,
   NumberInput,
@@ -99,6 +100,9 @@ export const getServerSideProps: GetServerSideProps<{
     take: 10,
     include: {
       author: true,
+    },
+    orderBy: {
+      createAt: 'desc',
     },
   })
   return {

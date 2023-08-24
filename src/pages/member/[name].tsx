@@ -94,7 +94,11 @@ export const getServerSideProps: GetServerSideProps<
       name: name,
     },
     include: {
-      posts: true,
+      posts: {
+        orderBy: {
+          createAt: 'desc',
+        },
+      },
     },
   })
   if (!member) {
