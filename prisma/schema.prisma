@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextIndex", "fullTextSearch", "postgresqlExtensions", "deno"]
 }
 
 datasource db {
@@ -43,6 +44,8 @@ model PostContent {
   updateAt DateTime @updatedAt
   post_id  Int      @unique
   post     Post?    @relation(fields: [post_id], references: [id], onDelete: Cascade)
+
+  @@index([content(ops: raw(""))], type: Gin)
 }
 
 model PostAddition {
