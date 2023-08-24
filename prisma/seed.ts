@@ -2,9 +2,18 @@ import { PrismaClient } from '@prisma/client'
 
 import { MD5 } from 'crypto-js'
 import { UserRole } from '@prisma/client'
-import { RandomStr } from '@/utils'
 
 const prisma = new PrismaClient()
+
+const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+
+function RandomStr(len: number): string {
+  let str = ''
+  for (let i = 0; i < len; i++) {
+    str += chars[Math.floor(Math.random() * chars.length)]
+  }
+  return str
+}
 
 async function development_seed() {
   const t_user = [

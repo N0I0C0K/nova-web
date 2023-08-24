@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev -p 11311",
     "build": "next build",
-    "start": "next start -p 80",
+    "start": "next start",
     "lint": "next lint",
     "reset": "npx prisma db push --force-reset && npx prisma db seed"
   },
@@ -15,7 +15,7 @@
     "@chakra-ui/react": "^2.8.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@prisma/client": "^5.1.0",
+    "@prisma/client": "^5.2.0",
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.14",
@@ -50,7 +50,7 @@
     "@types/crypto-js": "^4.1.1",
     "@types/node": "^20.4.5",
     "@types/react-syntax-highlighter": "^15.5.7",
-    "prisma": "^5.1.0",
+    "prisma": "^5.2.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   },
