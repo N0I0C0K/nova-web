@@ -2,10 +2,11 @@ import { PrismaClient } from '@prisma/client'
 
 import { MD5 } from 'crypto-js'
 import { UserRole } from '@prisma/client'
+import { RandomStr } from '@/utils'
 
 const prisma = new PrismaClient()
 
-async function main() {
+async function development_seed() {
   const t_user = [
     {
       name: 'Nick',
@@ -120,6 +121,38 @@ int main(){
       console.log(`content ${content.id} save`)
     }
   })
+}
+
+async function production_seed() {
+  const salt = MD5(RandomStr(12)).toString()
+  await prisma.user.create({
+    data: {
+      name: '正经的管理员',
+      description: '系统管理员',
+      secure: {
+        create: {
+          username: process.env.ADMIN_USERNAME!,
+          password: MD5(`${process.env.ADMIN_PASSWORD!}${salt}`).toString(),
+          salt: salt,
+        },
+      },
+    },
+  })
+}
+
+async function main() {
+  switch (process.env.NODE_ENV) {
+    case 'development':
+      console.log('init database with [development] seed')
+      await development_seed()
+      break
+    case 'production':
+      console.log('init database with [production] seed')
+      await production_seed()
+      break
+    default:
+      break
+  }
 }
 
 main()

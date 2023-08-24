@@ -70,19 +70,20 @@ const handler = LoginRequired(
     } catch (err) {
       res.status(500)
     }
-
+    const fileUrl = `https://${process.env.COS_Bucket}.cos.${process.env.COS_Region}.myqcloud.com/${form.filename}`
     await prisma.userFile.create({
       data: {
         user_id: id,
         objectKey: form.filename,
         fileType: form.filetype,
+        fileUrl,
       },
     })
 
     res.status(200).json({
       url,
       filename: form.filename,
-      fileurl: `https://${process.env.COS_Bucket}.cos.${process.env.COS_Region}.myqcloud.com/${form.filename}`,
+      fileurl: fileUrl,
     })
   })
 )
