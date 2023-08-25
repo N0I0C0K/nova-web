@@ -154,8 +154,12 @@ const ArticlePage: FC<{
           <Flex gap={'1rem'}>
             <Avatar name={post.author.name} src={post.author.avatarUrl ?? ''} />
             <Flex flexDir={'column'}>
-              <Text fontWeight={'bold'}>{post.author.name}</Text>
-              <Text color={'gray'}>{post.createAt.toLocaleString()}</Text>
+              <Link href={`/member/${post.author.name}`}>
+                <Text fontWeight={'bold'}>{post.author.name}</Text>
+              </Link>
+              <Tooltip label='发布于'>
+                <Text color={'gray'}>{post.createAt.toLocaleString()}</Text>
+              </Tooltip>
             </Flex>
           </Flex>
         </Flex>

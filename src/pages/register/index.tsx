@@ -9,10 +9,11 @@ import {
   Input,
   Button,
   Text,
+  FormErrorMessage,
 } from '@chakra-ui/react'
 import { AxiosError } from 'axios'
 import { MD5 } from 'crypto-js'
-import { Formik, Form } from 'formik'
+import { Formik, Form, Field } from 'formik'
 import { GetServerSideProps } from 'next'
 import { useSession, getCsrfToken } from 'next-auth/react'
 import { useRouter } from 'next/router'
@@ -42,6 +43,22 @@ const RegisterPage = () => {
             inviteCode: '',
             phone: '',
           }}
+          validate={(val) => {
+            const err = {} as any
+            if (val.name.length < 3) {
+              err.name = '用户名长度至少为3'
+            }
+            if (val.password.length < 8) {
+              err.password = '密码长度至少为8'
+            }
+            if (val.phone.length != 11) {
+              err.phone = '手机号码长度为11位'
+            }
+            if (val.inviteCode.length != 6) {
+              err.inviteCode = '邀请码长度为6位'
+            }
+            return err
+          }}
           onSubmit={async (val) => {
             console.log(val)
             axios
@@ -66,13 +83,22 @@ const RegisterPage = () => {
               })
           }}
         >
-          {({ values, handleChange, handleBlur, handleSubmit }) => (
+          {({
+            values,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            errors,
+            touched,
+          }) => (
             <>
               <Form
                 onSubmit={handleSubmit}
                 className='flex flex-col gap-5 w-72'
               >
-                <FormControl>
+                <FormControl
+                  isInvalid={errors.name !== undefined && touched.name}
+                >
                   <FormLabel>Username:</FormLabel>
                   <Input
                     value={values.name}
@@ -80,8 +106,11 @@ const RegisterPage = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
+                  <FormErrorMessage>{errors.name}</FormErrorMessage>
                 </FormControl>
-                <FormControl>
+                <FormControl
+                  isInvalid={errors.password !== undefined && touched.password}
+                >
                   <FormLabel>Password:</FormLabel>
                   <Input
                     type='password'
@@ -90,8 +119,11 @@ const RegisterPage = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
+                  <FormErrorMessage>{errors.password}</FormErrorMessage>
                 </FormControl>
-                <FormControl>
+                <FormControl
+                  isInvalid={errors.phone !== undefined && touched.phone}
+                >
                   <FormLabel>Phone:</FormLabel>
                   <Input
                     value={values.phone}
@@ -100,7 +132,11 @@ const RegisterPage = () => {
                     onBlur={handleBlur}
                   />
                 </FormControl>
-                <FormControl>
+                <FormControl
+                  isInvalid={
+                    errors.inviteCode !== undefined && touched.inviteCode
+                  }
+                >
                   <FormLabel>InviteCode:</FormLabel>
                   <Input
                     type='text'
@@ -109,6 +145,7 @@ const RegisterPage = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
+                  <FormErrorMessage>{errors.inviteCode}</FormErrorMessage>
                 </FormControl>
                 <Button mt={'2rem'} colorScheme='blue' type='submit'>
                   Register

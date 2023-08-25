@@ -5,11 +5,13 @@ import {
   IsMobilePhone,
   IsPhoneNumber,
   IsString,
+  Length,
   validate,
 } from 'class-validator'
 import { PostMethod } from '@/utils/api'
 
 class JoinFormDto {
+  @Length(4)
   @IsString()
   name!: string
 
@@ -17,9 +19,10 @@ class JoinFormDto {
   @IsEmail()
   email!: string
 
-  @IsMobilePhone()
+  @IsPhoneNumber('CN')
   phone!: string
 
+  @Length(20)
   @IsString()
   introduction!: string
 }
@@ -61,5 +64,3 @@ const handler = PostMethod(JoinFormDto, async (req, res, form) => {
 })
 
 export default handler
-
-
