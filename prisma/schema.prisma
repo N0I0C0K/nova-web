@@ -26,7 +26,7 @@ model Post {
   slug     String        @unique @default(cuid())
   title    String        @unique
   synopsis String
-  badges   String[]   
+  badges   String[]
   createAt DateTime      @default(now())
   updateAt DateTime      @updatedAt
   user_id  String
@@ -132,6 +132,7 @@ model UserSecure {
   user     User?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
   email    String?
   phone    String?
+  qq       String?
   username String   @unique
   password String
   salt     String
@@ -143,8 +144,9 @@ model UserSecure {
 model JoinForm {
   id           Int      @id @default(autoincrement())
   name         String   @unique
-  email        String
-  phone        String
+  qq           String   @unique
+  email        String   @unique
+  phone        String   @unique
   introduction String
   createAt     DateTime @default(now())
   updateAt     DateTime @updatedAt

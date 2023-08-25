@@ -51,6 +51,7 @@ const JoinPage = () => {
       <Formik
         initialValues={{
           name: '',
+          qq: '',
           email: '',
           phone: '',
           introduction: '',
@@ -116,7 +117,15 @@ const JoinPage = () => {
               />
               <FormErrorMessage>{errors.name}</FormErrorMessage>
             </FormControl>
-
+            <FormControl>
+              <FormLabel>QQ:</FormLabel>
+              <Input
+                value={values.qq}
+                name='qq'
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </FormControl>
             <FormControl>
               <FormLabel>Email:</FormLabel>
               <Input
@@ -150,7 +159,7 @@ const JoinPage = () => {
                 name='introduction'
                 onChange={handleChange}
                 onBlur={handleBlur}
-                placeholder='why you love game?'
+                placeholder='自我介绍/为什么喜欢游戏/为什么想加入我们（一定认真填写！）'
               />
               <FormErrorMessage>{errors.introduction}</FormErrorMessage>
             </FormControl>

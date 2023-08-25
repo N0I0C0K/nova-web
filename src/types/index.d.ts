@@ -46,3 +46,4 @@ export type UserAllInfo = User & {
 
 export type MemberFile = UserFile
 export type InviteCode = InvitationCode
+export type JoinFormProps = JoinForm

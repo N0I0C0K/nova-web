@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import {
   IsEmail,
   IsMobilePhone,
+  IsNumberString,
   IsPhoneNumber,
   IsString,
   Length,
@@ -21,6 +22,9 @@ class JoinFormDto {
 
   @IsPhoneNumber('CN')
   phone!: string
+
+  @IsNumberString()
+  qq!: string
 
   @Length(20)
   @IsString()

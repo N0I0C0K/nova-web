@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
 import { getToken } from 'next-auth/jwt'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { observable } from 'mobx'
 import { UserContext } from '@/page-components/user-manage/_UserAllInfoContext'
 import { PostManage } from '@/page-components/user-manage/_PostMange'
@@ -21,6 +21,7 @@ import { UserInfo } from '@/page-components/user-manage/_UserInfo'
 import { GroupManage } from '@/page-components/user-manage/_GroupManage'
 import { FileManage } from '@/page-components/user-manage/_FileManage'
 import { InviteManage } from '@/page-components/user-manage/_InviteManage'
+import { JoinFormManage } from '@/page-components/user-manage/JoinFormManage'
 
 const CustomTabPanel = chakra(TabPanel, {
   baseStyle: {
@@ -34,14 +35,17 @@ const CustomTab = chakra(Tab, {
 })
 
 function ToolsTab() {
+  const user = useContext(UserContext)
   return (
     <Tabs isFitted variant={'soft-rounded'}>
       <TabList className='flex gap-4'>
-        <CustomTab>文章管理</CustomTab>
-        <CustomTab>小组管理</CustomTab>
-        <CustomTab>游戏管理</CustomTab>
-        <CustomTab>文件管理</CustomTab>
-        <CustomTab>邀请码管理</CustomTab>
+        <CustomTab>文章</CustomTab>
+        <CustomTab>小组</CustomTab>
+        <CustomTab>游戏</CustomTab>
+        <CustomTab>文件</CustomTab>
+        <CustomTab>邀请码</CustomTab>
+        <CustomTab>申请</CustomTab>
+        {user.secure.level >= 100 && <CustomTab>用户管理</CustomTab>}
       </TabList>
       <TabPanels p={'-1rem'}>
         <CustomTabPanel>
@@ -57,6 +61,9 @@ function ToolsTab() {
         <CustomTabPanel>
           <InviteManage />
         </CustomTabPanel>
+        <CustomTabPanel>
+          <JoinFormManage />
+        </CustomTabPanel>
       </TabPanels>
     </Tabs>
   )
@@ -66,6 +73,7 @@ const UserManagePage = ({ user }: { user: UserAllInfo }) => {
   const [layout, setLayout, resetLayout] = useGlobalLayoutProps()
   useEffect(() => {
     setLayout({
+      ...layout,
       showHead: false,
       showFooter: false,
       gloablBoxProps: {
