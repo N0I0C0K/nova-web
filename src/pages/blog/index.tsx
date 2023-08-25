@@ -6,12 +6,15 @@ import {
   Badge,
   Box,
   Button,
+  Divider,
   Editable,
   EditableInput,
   EditablePreview,
   Flex,
   Heading,
   Input,
+  InputGroup,
+  InputRightElement,
   List,
   ListItem,
   NumberInput,
@@ -38,48 +41,61 @@ export default function BlogPage({
     return parseInt(router.query.page as string) || 0
   }, [router])
   return (
-    <Flex
-      pt={'5rem'}
-      flexDirection={'column'}
-      className='items-center'
-      gap={'.5rem'}
-    >
-      <Heading>Blog</Heading>
-      <Text color={'gray.400'}></Text>
-      <Text color='gray.400'>
-        这里是全部社员发布的文章，共{allBlogNum}篇文章，当前第{pageN}页
-      </Text>
-      <List pt={'3rem'} spacing={'1rem'}>
-        {articles.map((it, idx) => {
-          return (
-            <ListItem key={idx}>
-              <BlogItem
-                authorName={it.author.name}
-                id={it.slug}
-                synopsis={it.synopsis}
-                title={it.title}
-                badges={it.badges}
-                createAt={it.createAt}
-                updateAt={it.updateAt}
-              />
-            </ListItem>
-          )
-        })}
-      </List>
-      <Flex pt={'3rem'} gap={'1rem'}>
-        <Button>上一页</Button>
-        {Array.from({ length: allPage }).map((_, idx) => (
-          <Link key={idx} href={`/blog?page=${idx}`}>
-            <Button colorScheme={pageN === idx ? 'linkedin' : 'gray'}>
-              {idx}
+    <Flex flexDir={'column'} alignItems={'center'}>
+      <Flex
+        pt={'5rem'}
+        flexDirection={'column'}
+        className='items-center'
+        gap={'1rem'}
+        w={'50rem'}
+      >
+        <Heading>Blog</Heading>
+        <Text color={'gray.400'}></Text>
+        <Text color='gray.400'>
+          这里是全部社员发布的文章，共{allBlogNum}篇文章，当前第{pageN}页
+        </Text>
+        <InputGroup mb={'1rem'}>
+          <Input placeholder='serach..' />
+          <InputRightElement width='4rem' pr={'.5rem'}>
+            <Button h={'1.75rem'} size='sm' colorScheme={'blue'}>
+              search
             </Button>
-          </Link>
-        ))}
-        <Button>下一页</Button>
+          </InputRightElement>
+        </InputGroup>
+
+        <Divider />
+        <List spacing={'1rem'}>
+          {articles.map((it, idx) => {
+            return (
+              <ListItem key={idx}>
+                <BlogItem
+                  authorName={it.author.name}
+                  id={it.slug}
+                  synopsis={it.synopsis}
+                  title={it.title}
+                  badges={it.badges}
+                  createAt={it.createAt}
+                  updateAt={it.updateAt}
+                />
+              </ListItem>
+            )
+          })}
+        </List>
+        <Flex pt={'3rem'} gap={'1rem'}>
+          <Button>上一页</Button>
+          {Array.from({ length: allPage }).map((_, idx) => (
+            <Link key={idx} href={`/blog?page=${idx}`}>
+              <Button colorScheme={pageN === idx ? 'linkedin' : 'gray'}>
+                {idx}
+              </Button>
+            </Link>
+          ))}
+          <Button>下一页</Button>
+        </Flex>
+        <Text color='gray.400' mt={'1rem'}>
+          共{allBlogNum}篇文章，当前第{pageN}页
+        </Text>
       </Flex>
-      <Text color='gray.400' mt={'1rem'}>
-        共{allBlogNum}篇文章，当前第{pageN}页
-      </Text>
     </Flex>
   )
 }

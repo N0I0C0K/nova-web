@@ -46,6 +46,12 @@ export function PostMethod<T extends object>(
       })
       return
     }
+    if (!req.body || typeof req.body !== 'object') {
+      res.status(405).json({
+        message: 'please submit form',
+      })
+      return
+    }
     const form = plainToClass(cls, req.body)
     const err = await validate(form)
     if (err && err.length > 0) {
@@ -72,4 +78,11 @@ export function LoginRequired(
     }
     await handler(req, res)
   }
+}
+
+export function IpRatingLimit(
+  perSecond: number,
+  handler: NextApiHandler
+): NextApiHandler {
+  return async (req, res) => {}
 }
