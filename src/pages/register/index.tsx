@@ -1,4 +1,5 @@
 import { useAxios } from '@/components/AxiosProvider'
+import { useAlert } from '@/components/Providers/AlertProvider'
 import { MemberProps } from '@/types'
 import {
   useToast,
@@ -24,6 +25,7 @@ const RegisterPage = () => {
   const axios = useAxios()
   const router = useRouter()
   const toast = useToast()
+  const alert = useAlert()
   return (
     <Flex
       flexDir={'column'}
@@ -61,26 +63,34 @@ const RegisterPage = () => {
           }}
           onSubmit={async (val) => {
             console.log(val)
-            axios
-              .post<MemberProps>('/user/register', val)
-              .then(({ data }) => {
-                toast({
-                  title: '注册成功',
-                  status: 'success',
-                  isClosable: true,
-                })
-                router.push('/login')
-              })
-              .catch((e: AxiosError) => {
-                console.log(e)
-                toast({
-                  title: '注册失败',
-                  description: e.message,
-                  status: 'error',
-                  duration: 5000,
-                  isClosable: true,
-                })
-              })
+            alert.show({
+              title: '注意😱',
+              description:
+                '注册用户名为登录账户名，此后不允许更改（只有显示用户名可以修改），并且一个邀请码只能使用一次！请谨慎填写！',
+              show: true,
+              confirm() {
+                axios
+                  .post<MemberProps>('/user/register', val)
+                  .then(({ data }) => {
+                    toast({
+                      title: '注册成功',
+                      status: 'success',
+                      isClosable: true,
+                    })
+                    router.push('/login')
+                  })
+                  .catch((e: AxiosError) => {
+                    console.log(e)
+                    toast({
+                      title: '注册失败',
+                      description: e.message,
+                      status: 'error',
+                      duration: 5000,
+                      isClosable: true,
+                    })
+                  })
+              },
+            })
           }}
         >
           {({
