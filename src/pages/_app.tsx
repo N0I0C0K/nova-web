@@ -6,7 +6,7 @@ import BaseLayout from '@/components/BaseLayout'
 import { SessionProvider } from 'next-auth/react'
 import { AxiosProvider } from '@/components/AxiosProvider'
 import { UserProvider } from '@/components/UserInfoProvider'
-import { GlobalLayoutPropsProvider } from '@/components/GlobalHeaderProvider'
+import { GlobalLayoutPropsProvider } from '@/components/LayoutPropsProvider'
 import { AlertProvider } from '@/components/Providers/AlertProvider'
 import { UserInfoProvider } from '@/components/Providers/UserProvider'
 

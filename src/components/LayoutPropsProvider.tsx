@@ -5,6 +5,7 @@ export interface HeaderProps {
   showHead: boolean
   showFooter: boolean
   gloablBoxProps: ChakraProps
+  useAutoHideHead: boolean
 }
 
 const defaultHeaderProps: HeaderProps = {
@@ -15,6 +16,7 @@ const defaultHeaderProps: HeaderProps = {
     px: '5rem',
     pb: '1rem',
   },
+  useAutoHideHead: false,
 }
 
 const gloablLayoutPropsContext = createContext<

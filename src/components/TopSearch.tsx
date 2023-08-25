@@ -4,6 +4,8 @@ import {
   Button,
   Input,
   Kbd,
+  Center,
+  Box,
 } from '@chakra-ui/react'
 
 export const TopSearch: React.FC<{
@@ -13,9 +15,9 @@ export const TopSearch: React.FC<{
     <InputGroup className={className}>
       <Input pr='4.5rem' placeholder='place search here' variant={'filled'} />
       <InputRightElement width='6rem' pr={'.5rem'}>
-        <span>
+        <Box lineHeight={'100%'}>
           <Kbd>ctrl</Kbd> + <Kbd>K</Kbd>
-        </span>
+        </Box>
         {/* <Button h='1.75rem' size='sm' colorScheme={'blue'}>
           Search
         </Button> */}

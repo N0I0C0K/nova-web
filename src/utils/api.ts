@@ -1,3 +1,4 @@
+import { prisma } from '@/db'
 import { options } from '@/pages/api/auth/[...nextauth]'
 import { plainToClass } from 'class-transformer'
 import { validate } from 'class-validator'
@@ -68,13 +69,45 @@ export function LoginRequired(
   handler: (
     req: NextApiRequest,
     res: NextApiResponse
-  ) => unknown | Promise<unknown>
+  ) => unknown | Promise<unknown>,
+  limit: {
+    level?: number
+  } = {
+    level: 0,
+  }
 ): NextApiHandler {
   return async (req, res) => {
     const sess = await getServerSession(req, res, options)
     if (!sess) {
       res.status(401).redirect('/login')
       return
+    }
+    if (limit.level) {
+      const { id } = sess as any as { id: string }
+      if (!id) {
+        res.status(401).redirect('/login')
+        return
+      }
+      const user = await prisma.user.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          secure: true,
+        },
+      })
+
+      if (!user) {
+        res.status(401).redirect('/login')
+        return
+      }
+
+      if (user.secure!.level < limit.level) {
+        res.status(405).json({
+          message: 'permission denied',
+        })
+        return
+      }
     }
     await handler(req, res)
   }

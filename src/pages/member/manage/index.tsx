@@ -1,4 +1,4 @@
-import { useGlobalLayoutProps } from '@/components/GlobalHeaderProvider'
+import { useGlobalLayoutProps } from '@/components/LayoutPropsProvider'
 import { prisma } from '@/db'
 import { UserAllInfo } from '@/types'
 import {

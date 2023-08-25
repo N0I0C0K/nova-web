@@ -22,7 +22,7 @@ import {
   ChakraProps,
 } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import CustomRenderer from '@/components/markdown/CustomRenderer'
@@ -40,6 +40,7 @@ import {
 } from '@/components/Icons'
 import { useRouter } from 'next/router'
 import { useAlert } from '@/components/Providers/AlertProvider'
+import { useGlobalLayoutProps } from '@/components/LayoutPropsProvider'
 
 const ArticleTools: FC<{
   post: ArticleContentProps
@@ -115,6 +116,17 @@ const ArticlePage: FC<{
   const loginUser = useUserSession()
   const axios = useAxios()
   const toast = useToast()
+  const [layoutProps, setProps, reset] = useGlobalLayoutProps()
+
+  useEffect(() => {
+    setProps({
+      ...layoutProps,
+      useAutoHideHead: true,
+    })
+    return () => {
+      reset()
+    }
+  }, [])
 
   return (
     <Flex

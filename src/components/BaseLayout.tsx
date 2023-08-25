@@ -12,14 +12,15 @@ import {
   MenuButton,
   MenuDivider,
   Tooltip,
+  useBoolean,
 } from '@chakra-ui/react'
 import { Link } from '@chakra-ui/next-js'
 import { TopSearch } from './TopSearch'
 import { ColorModeToggle } from './ColorModeToggle'
 import { useRouter } from 'next/router'
-import { FC, useMemo } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react'
-import { useGlobalLayoutProps } from './GlobalHeaderProvider'
+import { useGlobalLayoutProps } from './LayoutPropsProvider'
 import {
   DashboardIcon,
   EditIcon,
@@ -95,9 +96,15 @@ function UserAvatar() {
           />
         </MenuButton>
         <MenuList>
-          <Text fontSize={'xl'} fontWeight={'bold'} px={'.5rem'}>
-            Hello! {sess.data?.user?.name}
-          </Text>
+          <Flex flexDir={'row'} ml={'.5rem'}>
+            <Avatar name={userInfo?.name} src={userInfo?.avatarUrl ?? ''} />
+            <Flex flexDir={'column'} ml={'1rem'}>
+              <Text fontWeight={'bold'}>{userInfo?.name}</Text>
+              <Text size={'xs'} color={'gray'}>
+                {userInfo?.description}
+              </Text>
+            </Flex>
+          </Flex>
           <MenuDivider />
           <MenuItem
             onClick={() => {
@@ -136,9 +143,38 @@ function TopHeader() {
     return router.pathname
   }, [router])
   const sess = useSession()
+  const [show, setShow] = useBoolean(true)
+  const [layoutProps] = useGlobalLayoutProps()
+
+  useEffect(() => {
+    if (!layoutProps.useAutoHideHead) return
+    let dy = 0,
+      py = window.scrollY
+    const step = 18 * 16
+    const handleScroll = () => {
+      const ty = window.scrollY
+      if ((ty - py) * dy < 0) dy = 0
+      dy += ty - py
+
+      if (dy > step) {
+        setShow.off()
+      } else if (dy < -step) {
+        setShow.on()
+      }
+
+      py = ty
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [layoutProps.useAutoHideHead])
+
   return (
     <Flex
-      className='items-center backdrop-blur-md z-50'
+      className={`items-center z-50 duration-500 ${
+        show ? 'backdrop-blur-md' : '-translate-y-20'
+      }`}
       gap={'2rem'}
       py={'2rem'}
       px={'5rem'}
