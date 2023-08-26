@@ -119,9 +119,11 @@ const ArticlePage: FC<{
   const [layoutProps, setProps, reset] = useGlobalLayoutProps()
 
   useEffect(() => {
-    setProps({
-      ...layoutProps,
-      useAutoHideHead: true,
+    setProps((val) => {
+      return {
+        ...val,
+        useAutoHideHead: true,
+      }
     })
     return () => {
       reset()

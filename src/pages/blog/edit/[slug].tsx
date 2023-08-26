@@ -73,14 +73,16 @@ const BlogEditPage: FC<{
   const [open, setOpen] = useState(false)
   const [helpOpen, help] = useBoolean()
   useEffect(() => {
-    setLayoutProps({
-      ...layoutProps,
-      showHead: false,
-      showFooter: false,
-      gloablBoxProps: {
-        p: '2rem',
-        h: '100vh',
-      },
+    setLayoutProps((props) => {
+      return {
+        ...props,
+        showHead: false,
+        showFooter: false,
+        gloablBoxProps: {
+          p: '2rem',
+          h: '100vh',
+        },
+      }
     })
     return () => {
       reset()

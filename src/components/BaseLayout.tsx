@@ -168,12 +168,12 @@ function TopHeader() {
     return () => {
       window.removeEventListener('scroll', handleScroll)
     }
-  }, [layoutProps.useAutoHideHead])
+  }, [layoutProps.useAutoHideHead, setShow])
 
   return (
     <Flex
-      className={`items-center z-50 duration-500 ${
-        show ? 'backdrop-blur-md' : '-translate-y-20'
+      className={`items-center z-50 backdrop-blur-md duration-500 ease-in-out ${
+        show ? '' : '-translate-y-20'
       }`}
       gap={'2rem'}
       py={'2rem'}
