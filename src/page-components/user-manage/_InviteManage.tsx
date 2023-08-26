@@ -35,7 +35,11 @@ export const InviteManage = observer(() => {
               .post<InviteCode>('user/createInvitationCode')
               .then(({ data }) => {
                 runInAction(() => {
-                  user.invitations.push(data)
+                  user.invitations.push({
+                    ...data,
+                    createAt: new Date(data.createAt),
+                    updateAt: new Date(data.updateAt),
+                  })
                 })
                 toast({
                   title: '创建成功',

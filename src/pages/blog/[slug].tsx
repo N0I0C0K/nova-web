@@ -232,7 +232,13 @@ const ArticlePage: FC<{
                 .then(({ data, status }) => {
                   if (status === 200) {
                     setText('')
-                    setComments((val) => [...val, data])
+                    setComments((val) => [
+                      ...val,
+                      {
+                        ...data,
+                        createAt: new Date(data.createAt),
+                      },
+                    ])
                     toast({
                       title: '评论成功',
                       description: '感谢您的评论',

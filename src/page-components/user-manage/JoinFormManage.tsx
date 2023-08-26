@@ -83,9 +83,9 @@ export function JoinFormManage() {
               color={'gray'}
               isReadOnly
               minH={'6rem'}
-            >
-              {item.introduction}
-            </Textarea>
+              value={item.introduction}
+            />
+
             <Flex>
               <Spacer />
               <Tooltip label='最后修改时间'>
