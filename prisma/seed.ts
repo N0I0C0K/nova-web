@@ -143,6 +143,7 @@ async function production_seed() {
           username: process.env.ADMIN_USERNAME!,
           password: MD5(`${process.env.ADMIN_PASSWORD!}${salt}`).toString(),
           salt: salt,
+          level: 100,
         },
       },
     },
