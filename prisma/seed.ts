@@ -9,6 +9,7 @@ const prisma = new PrismaClient()
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 
 function choice<T>(arr: T[]): T {
+  if (arr.length === 0) return undefined as any
   return arr[faker.number.int({ min: 0, max: arr.length - 1 })]
 }
 
@@ -21,6 +22,18 @@ function RandomStr(len: number): string {
 }
 
 async function development_seed() {
+  const groups = []
+  for (let i = 0; i < 4; ++i) {
+    const group = await prisma.group.create({
+      data: {
+        name: faker.word.words({ count: { min: 1, max: 3 } }),
+        description: faker.lorem.lines(),
+        avatarUrl: faker.image.avatar(),
+      },
+    })
+    groups.push(group)
+  }
+
   const t_user = Array.from({ length: 50 }).map(() => ({
     name: faker.person.firstName(),
     description: faker.lorem.lines(),
@@ -39,7 +52,10 @@ async function development_seed() {
       where: {
         name: val.name,
       },
-      create: val,
+      create: {
+        ...val,
+        groupId: choice(groups).id,
+      },
       update: val,
     })
     const salt = MD5(`${faker.string.alpha({ length: 10 })}`).toString()
@@ -58,6 +74,25 @@ async function development_seed() {
         user_id: user.id,
       },
     })
+    for (let group of groups) {
+      const groupNow = await prisma.group.findUnique({
+        where: {
+          id: group.id,
+        },
+        include: {
+          users: true,
+        },
+      })
+      if (!groupNow) continue
+      await prisma.group.update({
+        where: {
+          id: group.id,
+        },
+        data: {
+          master_id: choice(groupNow?.users)?.id,
+        },
+      })
+    }
     user_ids.push(user.id)
   }
   user_ids.every(async (user_id) => {
