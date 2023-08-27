@@ -4,6 +4,7 @@ import { Divider, Flex, Text } from '@chakra-ui/react'
 
 export function GroupManage() {
   const user = useContext(UserContext)
+
   return (
     <Flex
       p={'1rem'}
@@ -15,12 +16,23 @@ export function GroupManage() {
       <Text fontSize={'xl'} fontWeight={'extrabold'}>
         加入的小组：
       </Text>
-      <Flex
-        flexDir={'row'}
-        p={'1rem'}
-        border={'ActiveBorder'}
-        rounded={'md'}
-      ></Flex>
+      {user.group ? (
+        <>
+          <Flex
+            flexDir={'row'}
+            p={'1rem'}
+            border={'ActiveBorder'}
+            rounded={'md'}
+          >
+            {user.group?.name}
+          </Flex>
+        </>
+      ) : (
+        <>
+          <Text>你还没有加入任何小组</Text>
+        </>
+      )}
+
       <Divider />
     </Flex>
   )

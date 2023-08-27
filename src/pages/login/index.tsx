@@ -57,20 +57,28 @@ const LoginPage = () => {
             }}
             onSubmit={async (val) => {
               console.log(val)
-              const salt = await axios.get<{
-                salt: string
-              }>('/user/salt', {
-                params: {
+              try {
+                const salt = await axios.get<{
+                  salt: string
+                }>('/user/salt', {
+                  params: {
+                    username: val.username,
+                  },
+                })
+                const csrfToken = await getCsrfToken()
+                const res = await axios.post('/auth/callback/account', {
+                  csrfToken,
                   username: val.username,
-                },
-              })
-              const csrfToken = await getCsrfToken()
-              const res = await axios.post('/auth/callback/account', {
-                csrfToken,
-                username: val.username,
-                password: MD5(`${val.password}${salt.data.salt}`).toString(),
-              })
-              window.location.href = res.request?.responseURL
+                  password: MD5(`${val.password}${salt.data.salt}`).toString(),
+                })
+                window.location.href = res.request?.responseURL
+              } catch (e) {
+                toast({
+                  title: '登录失败',
+                  description: '请检查用户名和密码是否正确',
+                  status: 'error',
+                })
+              }
             }}
           >
             {({ values, handleChange, handleBlur, handleSubmit }) => (

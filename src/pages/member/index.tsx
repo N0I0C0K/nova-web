@@ -52,7 +52,11 @@ const MemberPage: React.FC<{
 export const getServerSideProps: GetServerSideProps<{
   members: MemberProps[]
 }> = async (ctx) => {
-  const users = await prisma.user.findMany()
+  const users = await prisma.user.findMany({
+    include: {
+      group: true,
+    },
+  })
   return {
     props: {
       members: users,
