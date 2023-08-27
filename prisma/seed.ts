@@ -1,11 +1,16 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, User } from '@prisma/client'
 
 import { MD5 } from 'crypto-js'
 import { UserRole } from '@prisma/client'
+import { faker } from '@faker-js/faker'
 
 const prisma = new PrismaClient()
 
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+
+function choice<T>(arr: T[]): T {
+  return arr[faker.number.int({ min: 0, max: arr.length - 1 })]
+}
 
 function RandomStr(len: number): string {
   let str = ''
@@ -16,20 +21,20 @@ function RandomStr(len: number): string {
 }
 
 async function development_seed() {
-  const t_user = [
-    {
-      name: 'Nick',
-      description: 'Hello! this is nick',
-      role: UserRole.Programer,
-    },
-    {
-      name: 'Link',
-      description: 'Hello! this is Link',
-      role: UserRole.Programer,
-    },
-  ]
-
-  t_user.every(async (val) => {
+  const t_user = Array.from({ length: 50 }).map(() => ({
+    name: faker.person.firstName(),
+    description: faker.lorem.lines(),
+    avatarUrl: faker.image.avatar(),
+    role: UserRole.User,
+  }))
+  t_user.push({
+    name: 'Nick',
+    avatarUrl: '',
+    description: 'This is nick!',
+    role: UserRole.User,
+  })
+  const user_ids: string[] = []
+  for (let val of t_user) {
     const user = await prisma.user.upsert({
       where: {
         name: val.name,
@@ -37,7 +42,7 @@ async function development_seed() {
       create: val,
       update: val,
     })
-    const salt = MD5(`${val.name}`).toString()
+    const salt = MD5(`${faker.string.alpha({ length: 10 })}`).toString()
     const secure = await prisma.userSecure.upsert({
       where: {
         username: val.name,
@@ -53,11 +58,14 @@ async function development_seed() {
         user_id: user.id,
       },
     })
-    for (let i = 0; i <= 10; ++i) {
+    user_ids.push(user.id)
+  }
+  user_ids.every(async (user_id) => {
+    for (let i = 0; i <= faker.number.int({ min: 3, max: 20 }); ++i) {
       const blogVal = {
-        synopsis: `${user.name}'s test synopsis`,
-        title: `${user.name}'s ${i} Blog`,
-        user_id: user.id,
+        synopsis: faker.lorem.lines(),
+        title: faker.lorem.lines(1),
+        user_id: user_id,
         badges: i % 3 === 0 ? ['game', 'c++'] : ['python', 'art'],
       }
       const blog = await prisma.post.upsert({
@@ -68,14 +76,16 @@ async function development_seed() {
         update: {},
       })
       let md = `# ${blog.title}
-Hello This is ${user.name}'s ${i} title
+## ${faker.lorem.words()}
+
+${faker.lorem.paragraph()}
 
 ## list
 
-- item 1
-- item 2
-- item 3
-- item 4
+- ${faker.lorem.lines(1)}
+- ${faker.lorem.lines(1)}
+- ${faker.lorem.lines(1)}
+- ${faker.lorem.lines(1)}
 
 ## table
 
@@ -90,7 +100,7 @@ name b|type b
 
 ## sy
 
-> this is test text
+> ${faker.lorem.lines()}
 
 ## code
 
@@ -100,11 +110,11 @@ name b|type b
 using namespace std;
 
 int main(){
-  cout<<"Hello world"<<endl;
-  return 0;
+cout<<"Hello world"<<endl;
+return 0;
 }
 \`\`\`
-      `
+    `
       const content = await prisma.postContent.create({
         data: {
           post_id: blog.id,
@@ -118,16 +128,16 @@ int main(){
         },
       })
 
-      for (let j = 0; j <= 20; ++j) {
+      for (let j = 0; j <= faker.number.int({ min: 5, max: 40 }); ++j) {
         const comment = await prisma.comment.create({
           data: {
-            content: `this is test ${j} comment`,
-            user_id: user.id,
+            content: faker.lorem.lines({ min: 1, max: 5 }),
+            user_id: choice(user_ids),
             post_id: blog.id,
           },
         })
       }
-      console.log(`content ${content.id} save`)
+      console.log(`blod add ${blog.title}`)
     }
   })
 }
