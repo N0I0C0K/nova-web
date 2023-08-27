@@ -1,6 +1,12 @@
 import { prisma } from '@/db'
 import { PostMethod } from '@/utils/api'
-import { IsNumber, IsPhoneNumber, IsString, Length } from 'class-validator'
+import {
+  IsNumber,
+  IsNumberString,
+  IsPhoneNumber,
+  IsString,
+  Length,
+} from 'class-validator'
 import { MD5 } from 'crypto-js'
 
 class RegisterDto {
@@ -19,6 +25,14 @@ class RegisterDto {
   @IsPhoneNumber('CN')
   @IsString()
   phone!: string
+
+  @Length(1)
+  @IsString()
+  realName!: string
+
+  @Length(10)
+  @IsNumberString()
+  stuId!: string
 }
 
 const handler = PostMethod(RegisterDto, async (req, res, form) => {
@@ -59,6 +73,8 @@ const handler = PostMethod(RegisterDto, async (req, res, form) => {
           username: name,
           salt,
           phone,
+          realName: form.realName,
+          stuId: form.stuId,
         },
       },
     },

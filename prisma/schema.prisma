@@ -133,6 +133,8 @@ model UserSecure {
   email    String?
   phone    String?
   qq       String?
+  realName String?
+  stuId    String?
   username String   @unique
   password String
   salt     String

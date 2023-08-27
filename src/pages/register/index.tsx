@@ -20,6 +20,15 @@ import { useSession, getCsrfToken } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { useMemo, useEffect } from 'react'
 
+const nameMap = {
+  name: '用户名',
+  password: '密码',
+  inviteCode: '邀请码',
+  phone: '手机',
+  realName: '真实姓名',
+  stuId: '学号',
+}
+
 const RegisterPage = () => {
   const sess = useSession()
   const axios = useAxios()
@@ -40,25 +49,40 @@ const RegisterPage = () => {
       ) : (
         <Formik
           initialValues={{
-            name: '',
-            password: '',
             inviteCode: '',
+            name: '',
+            realName: '',
+            stuId: '',
             phone: '',
+            password: '',
           }}
           validate={(val) => {
             const err = {} as any
             if (val.name.length < 3) {
               err.name = '用户名长度至少为3'
             }
+            if (val.name.includes(' ')) {
+              err.name = '用户名不能包含空格'
+            }
+
             if (val.password.length < 8) {
               err.password = '密码长度至少为8'
             }
+
             if (val.phone.length != 11) {
               err.phone = '手机号码长度为11位'
             }
+
             if (val.inviteCode.length != 6) {
               err.inviteCode = '邀请码长度为6位'
             }
+            if (val.stuId.length < 10) {
+              err.stuId = '学号错误'
+            }
+            if (val.realName.length < 2) {
+              err.realName = '真实姓名错误'
+            }
+
             return err
           }}
           onSubmit={async (val) => {
@@ -104,59 +128,33 @@ const RegisterPage = () => {
             <>
               <Form
                 onSubmit={handleSubmit}
-                className='flex flex-col gap-5 w-72'
+                className='flex flex-col gap-5 w-80'
               >
-                <FormControl
-                  isInvalid={errors.name !== undefined && touched.name}
-                >
-                  <FormLabel>Username:</FormLabel>
-                  <Input
-                    value={values.name}
-                    name='name'
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                  <FormErrorMessage>{errors.name}</FormErrorMessage>
-                </FormControl>
-                <FormControl
-                  isInvalid={errors.password !== undefined && touched.password}
-                >
-                  <FormLabel>Password:</FormLabel>
-                  <Input
-                    type='password'
-                    value={values.password}
-                    name='password'
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                  <FormErrorMessage>{errors.password}</FormErrorMessage>
-                </FormControl>
-                <FormControl
-                  isInvalid={errors.phone !== undefined && touched.phone}
-                >
-                  <FormLabel>Phone:</FormLabel>
-                  <Input
-                    value={values.phone}
-                    name='phone'
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                </FormControl>
-                <FormControl
-                  isInvalid={
-                    errors.inviteCode !== undefined && touched.inviteCode
-                  }
-                >
-                  <FormLabel>InviteCode:</FormLabel>
-                  <Input
-                    type='text'
-                    value={values.inviteCode}
-                    name='inviteCode'
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                  <FormErrorMessage>{errors.inviteCode}</FormErrorMessage>
-                </FormControl>
+                {Object.keys(values).map((val) => {
+                  return (
+                    <FormControl
+                      isRequired
+                      key={val}
+                      isInvalid={
+                        errors[val as keyof typeof errors] !== undefined &&
+                        touched[val as keyof typeof touched]
+                      }
+                    >
+                      <FormLabel>
+                        {nameMap[val as keyof typeof nameMap]}:
+                      </FormLabel>
+                      <Input
+                        value={values[val as keyof typeof values]}
+                        name={val}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                      <FormErrorMessage>
+                        {errors[val as keyof typeof errors]}
+                      </FormErrorMessage>
+                    </FormControl>
+                  )
+                })}
                 <Button mt={'2rem'} colorScheme='blue' type='submit'>
                   Register
                 </Button>
