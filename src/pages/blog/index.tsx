@@ -3,13 +3,8 @@ import { prisma } from '@/db'
 import { ArticleProps, MemberProps } from '@/types'
 import { Link } from '@chakra-ui/next-js'
 import {
-  Badge,
-  Box,
   Button,
   Divider,
-  Editable,
-  EditableInput,
-  EditablePreview,
   Flex,
   Heading,
   Input,
@@ -17,8 +12,6 @@ import {
   InputRightElement,
   List,
   ListItem,
-  NumberInput,
-  Spacer,
   Text,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
@@ -82,18 +75,28 @@ export default function BlogPage({
           })}
         </List>
         <Flex pt={'3rem'} gap={'1rem'}>
-          <Button>上一页</Button>
-          {Array.from({ length: allPage }).map((_, idx) => (
-            <Link key={idx} href={`/blog?page=${idx}`}>
-              <Button colorScheme={pageN === idx ? 'linkedin' : 'gray'}>
-                {idx}
-              </Button>
-            </Link>
-          ))}
-          <Button>下一页</Button>
+          <Link href={'/blog?page=0'}>
+            <Button>首页</Button>
+          </Link>
+          {Array.from({ length: Math.min(allPage, 5) }).map((_, idx) => {
+            let p = idx + pageN - 2
+            if (p < 0 || p > allPage) {
+              return <></>
+            }
+            return (
+              <Link key={idx} href={`/blog?page=${p}`}>
+                <Button colorScheme={pageN === p ? 'linkedin' : 'gray'}>
+                  {p}
+                </Button>
+              </Link>
+            )
+          })}
+          <Link href={`/blog?page=${allPage}`}>
+            <Button>尾页</Button>
+          </Link>
         </Flex>
         <Text color='gray.400' mt={'1rem'}>
-          共{allBlogNum}篇文章，当前第{pageN}页
+          共{allBlogNum}篇文章，当前第{pageN}页，一共{allPage}页
         </Text>
       </Flex>
     </Flex>

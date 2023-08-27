@@ -59,7 +59,7 @@ const MemberSpace: React.FC<{
         name={member.name}
         src={member.avatarUrl ?? ''}
         size={'2xl'}
-        pb={'1rem'}
+        mb={'1rem'}
       />
       <Heading>{member.name}</Heading>
       <Text color={'gray.400'}>{member.description}</Text>
