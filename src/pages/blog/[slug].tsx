@@ -22,7 +22,7 @@ import {
   ChakraProps,
 } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import CustomRenderer from '@/components/markdown/CustomRenderer'
@@ -50,8 +50,26 @@ const ArticleTools: FC<{
   const alter = useAlert()
   const axios = useAxios()
   const toast = useToast()
+  const flref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!flref.current) return
+    const pos = flref.current?.parentElement?.getBoundingClientRect()
+    const box = flref.current.getBoundingClientRect()
+    flref.current.style.left = `${pos!.left - box.width - 30}px`
+    flref.current.style.top = `${pos!.top + 10}px`
+  }, [])
+
   return (
-    <Flex pos={'absolute'} flexDir={'column'} gap={'1rem'} sx={sx}>
+    <Flex
+      pos={'fixed'}
+      flexDir={'column'}
+      gap={'1rem'}
+      sx={{
+        ...sx,
+      }}
+      ref={flref}
+    >
       <Tooltip label='编辑文章'>
         <IconButton
           icon={<EditIcon />}
@@ -139,13 +157,7 @@ const ArticlePage: FC<{
     >
       <Flex pos={'relative'} w={'50rem'} flexDir={'column'} gap={'1rem'}>
         {loginUser.isLogin && loginUser.id === post.user_id ? (
-          <ArticleTools
-            post={post}
-            sx={{
-              left: '-6rem',
-              top: '1rem',
-            }}
-          />
+          <ArticleTools post={post} />
         ) : null}
         <Flex gap={'.5rem'} alignItems={'center'}>
           <Flex flexDir={'column'}>
