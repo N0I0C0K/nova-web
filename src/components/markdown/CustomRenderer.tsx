@@ -217,7 +217,7 @@ export const defaults: Defaults = {
     const sizes = ['2xl', 'xl', 'lg', 'md', 'sm', 'xs']
     return (
       <Heading
-        my={4}
+        mb={4}
         as={`h${level}`}
         size={sizes[`${level - 1}`]}
         className='hover:underline decoration-orange-200'

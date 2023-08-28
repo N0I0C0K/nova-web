@@ -164,7 +164,7 @@ const ArticlePage: FC<{
           <Flex flexDir={'column'}>
             <Heading>{post.title}</Heading>
             <Text color={'gray'}>{post.synopsis}</Text>
-            <Flex gap={'.5rem'}>
+            <Flex gap={'.5rem'} mt={'.5rem'}>
               {post.badges.map((val) => (
                 <Badge colorScheme='green' key={val}>
                   {val}

@@ -33,12 +33,12 @@ async function development_seed() {
     })
     groups.push(group)
   }
-
+  const userRoles = Object.keys(UserRole)
   const t_user = Array.from({ length: 50 }).map(() => ({
     name: faker.person.firstName(),
     description: faker.lorem.lines(),
     avatarUrl: faker.image.avatar(),
-    role: UserRole.User,
+    role: choice(userRoles) as UserRole,
   }))
   t_user.push({
     name: 'Nick',
