@@ -20,6 +20,7 @@ import {
   Icon,
   Tooltip,
   ChakraProps,
+  Badge,
 } from '@chakra-ui/react'
 import { GetServerSideProps } from 'next'
 import { FC, useEffect, useRef, useState } from 'react'
@@ -163,6 +164,13 @@ const ArticlePage: FC<{
           <Flex flexDir={'column'}>
             <Heading>{post.title}</Heading>
             <Text color={'gray'}>{post.synopsis}</Text>
+            <Flex gap={'.5rem'}>
+              {post.badges.map((val) => (
+                <Badge colorScheme='green' key={val}>
+                  {val}
+                </Badge>
+              ))}
+            </Flex>
           </Flex>
           <Spacer />
           <Flex gap={'1rem'}>
@@ -245,11 +253,11 @@ const ArticlePage: FC<{
                   if (status === 200) {
                     setText('')
                     setComments((val) => [
-                      ...val,
                       {
                         ...data,
                         createAt: new Date(data.createAt),
                       },
+                      ...val,
                     ])
                     toast({
                       title: '评论成功',

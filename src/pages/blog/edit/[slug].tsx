@@ -173,7 +173,7 @@ const BlogEditPage: FC<{
           <EditCode
             value={text}
             ref={textRef}
-            language='md'
+            language='markdown'
             data-color-mode={mode.colorMode}
             padding={20}
             style={{
