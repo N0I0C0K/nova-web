@@ -9,11 +9,11 @@ class ModifyDto {
   @IsString()
   content!: string
 
-  @Length(3, 50)
+  @Length(3)
   @IsString()
   title!: string
 
-  @Length(3, 50)
+  @Length(3)
   @IsString()
   synopsis!: string
 

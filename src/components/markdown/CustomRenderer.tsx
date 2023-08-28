@@ -32,7 +32,7 @@ const SyntaxHighlighter = dynamic(
       return mod.Prism
     }),
   {
-    loading: () => <Text>loading</Text>,
+    loading: () => <Text>loading...</Text>,
   }
 )
 
@@ -55,6 +55,26 @@ interface Defaults extends Components {
 }
 
 export const defaults: Defaults = {
+  strong: (props) => {
+    return (
+      <Text
+        as={'strong'}
+        sx={{
+          px: 1,
+          py: 0.5,
+          rounded: 'md',
+          _dark: {
+            bgColor: 'orange.600',
+          },
+          _light: {
+            bgColor: 'orange.200',
+          },
+        }}
+      >
+        {props.children}
+      </Text>
+    )
+  },
   p: (props) => {
     const { children } = props
     return (
@@ -200,7 +220,7 @@ export const defaults: Defaults = {
         my={4}
         as={`h${level}`}
         size={sizes[`${level - 1}`]}
-        className='hover:underline decoration-orange-400 cursor-pointer'
+        className='hover:underline decoration-orange-200'
         {...getCoreProps(props)}
       >
         {children}
@@ -222,6 +242,7 @@ export const defaults: Defaults = {
 function CustomRenderer(theme?: Defaults, merge = true): Components {
   const elements = {
     p: defaults.p,
+    strong: defaults.strong,
     em: defaults.em,
     blockquote: defaults.blockquote,
     code: defaults.code,
