@@ -9,6 +9,7 @@ import { UserProvider } from '@/components/UserInfoProvider'
 import { GlobalLayoutPropsProvider } from '@/components/LayoutPropsProvider'
 import { AlertProvider } from '@/components/Providers/AlertProvider'
 import { UserInfoProvider } from '@/components/Providers/UserProvider'
+import { SearchProvider } from '@/components/Providers/SearchProvider'
 
 export default function App({
   Component,
@@ -21,11 +22,13 @@ export default function App({
           <UserProvider>
             <GlobalLayoutPropsProvider>
               <AlertProvider>
-                <UserInfoProvider>
-                  <BaseLayout>
-                    <Component {...pageProps} />
-                  </BaseLayout>
-                </UserInfoProvider>
+                <SearchProvider>
+                  <UserInfoProvider>
+                    <BaseLayout>
+                      <Component {...pageProps} />
+                    </BaseLayout>
+                  </UserInfoProvider>
+                </SearchProvider>
               </AlertProvider>
             </GlobalLayoutPropsProvider>
           </UserProvider>

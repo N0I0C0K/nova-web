@@ -32,6 +32,7 @@
     "lodash": "^4.17.21",
     "mobx": "^6.10.0",
     "mobx-react-lite": "^4.0.3",
+    "nanoid": "^4.0.2",
     "next": "13.4.12",
     "next-auth": "^4.22.3",
     "next-superjson-plugin": "^0.5.9",

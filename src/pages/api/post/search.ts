@@ -15,6 +15,7 @@ class SearchDto {
 }
 
 const handler = PostMethod(SearchDto, async (req, res, form) => {
+  form.titleInclude = form.titleInclude.replaceAll(' ', ' & ')
   const posts = await prisma.post.findMany({
     where: {
       OR: [
