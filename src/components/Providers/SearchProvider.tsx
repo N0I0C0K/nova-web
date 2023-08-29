@@ -16,6 +16,7 @@ import {
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { useAxios } from '../AxiosProvider'
 import { ArticleProps } from '@/types'
+import { Link } from '@chakra-ui/next-js'
 
 const searchContext = createContext<
   [SearchInter, React.Dispatch<React.SetStateAction<SearchInter>>]
@@ -63,7 +64,7 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
             ...data.posts.map((post) => ({
               title: post.title,
               subTitle: post.synopsis,
-              url: '',
+              url: `/blog/${post.slug}`,
             })),
           ])
         } else {
@@ -78,12 +79,17 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
         }
       })
   }
+  const close = () => {
+    setState((val) => ({
+      ...val,
+      isShow: false,
+    }))
+  }
   return (
     <searchContext.Provider value={[searchState, setState]}>
       {children}
       <Modal
         isOpen={searchState.isShow}
-        scrollBehavior='inside'
         onClose={() => {
           setState({
             isShow: false,
@@ -113,36 +119,45 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
               {result.length > 0 ? (
                 <>
                   <Divider />
-                  {result.map((val, idx) => (
-                    <Flex key={idx} className='border rounded-md p-2'>
-                      <Flex flexDir={'column'}>
-                        <Text fontWeight={'bold'} fontSize={'lg'}>
-                          <Highlight
-                            query={hightLightQuery}
-                            styles={{
-                              px: 1,
-                              bgColor: 'orange.400',
-                              display: 'inline',
-                            }}
-                          >
-                            {val.title}
-                          </Highlight>
-                        </Text>
-                        <Text textColor={'gray'}>
-                          <Highlight
-                            query={hightLightQuery}
-                            styles={{
-                              px: 1,
-                              bgColor: 'orange.400',
-                              display: 'inline',
-                            }}
-                          >
-                            {val.subTitle}
-                          </Highlight>
-                        </Text>
+                  <Flex
+                    flexDir={'column'}
+                    overflow={'scroll'}
+                    gap={'.5rem'}
+                    h={'30rem'}
+                  >
+                    {result.map((val, idx) => (
+                      <Flex key={idx} className='border rounded-md p-2'>
+                        <Flex flexDir={'column'}>
+                          <Link href={val.url} onClick={close}>
+                            <Text fontWeight={'bold'} fontSize={'lg'}>
+                              <Highlight
+                                query={hightLightQuery}
+                                styles={{
+                                  px: 1,
+                                  bgColor: 'orange.400',
+                                  display: 'inline',
+                                }}
+                              >
+                                {val.title}
+                              </Highlight>
+                            </Text>
+                          </Link>
+                          <Text textColor={'gray'}>
+                            <Highlight
+                              query={hightLightQuery}
+                              styles={{
+                                px: 1,
+                                bgColor: 'orange.400',
+                                display: 'inline',
+                              }}
+                            >
+                              {val.subTitle}
+                            </Highlight>
+                          </Text>
+                        </Flex>
                       </Flex>
-                    </Flex>
-                  ))}
+                    ))}
+                  </Flex>
                 </>
               ) : (
                 <>
