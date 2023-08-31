@@ -16,6 +16,9 @@ import {
   Avatar,
   Spacer,
   IconButton,
+  Box,
+  Center,
+  Tooltip,
 } from '@chakra-ui/react'
 import { Formik, Form } from 'formik'
 import { runInAction } from 'mobx'
@@ -151,15 +154,25 @@ export const UserInfo = observer(() => {
           })
         }}
       />
-      <Avatar
-        name={user.name}
-        src={user.avatarUrl ?? ''}
-        size={'lg'}
-        className='cursor-pointer'
-        onClick={() => {
-          fileSelect.current?.click()
-        }}
-      />
+      <Flex className='group' alignItems={'center'} justifyContent={'center'}>
+        <Tooltip label='点击更改头像'>
+          <Avatar
+            name={user.name}
+            src={user.avatarUrl ?? ''}
+            size={'lg'}
+            className='cursor-pointer  duration-200 group-hover:brightness-50'
+            onClick={() => {
+              fileSelect.current?.click()
+            }}
+          ></Avatar>
+        </Tooltip>
+        <EditIcon
+          display={'none'}
+          className='group-hover:inline-block'
+          pos={'absolute'}
+        />
+      </Flex>
+
       <Flex flexDir={'column'}>
         <Text fontSize={'lg'} fontWeight={'bold'}>
           {user.name} ({user.secure.username})
