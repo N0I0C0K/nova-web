@@ -16,7 +16,8 @@ import {
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next/types'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
+import { nanoid } from 'nanoid'
 
 type BlogProps = { author: MemberProps } & ArticleProps
 
@@ -33,6 +34,7 @@ export default function BlogPage({
   const pageN = useMemo(() => {
     return parseInt(router.query.page as string) || 0
   }, [router])
+  const [key] = useState(nanoid())
   return (
     <Flex flexDir={'column'} alignItems={'center'}>
       <Flex
@@ -41,6 +43,7 @@ export default function BlogPage({
         className='items-center'
         gap={'1rem'}
         w={'50rem'}
+        key={key}
       >
         <Heading>Blog</Heading>
         <Text color={'gray.400'}></Text>
@@ -60,7 +63,7 @@ export default function BlogPage({
         <List spacing={'1rem'}>
           {articles.map((it, idx) => {
             return (
-              <ListItem key={idx}>
+              <ListItem key={it.slug}>
                 <BlogItem
                   authorName={it.author.name}
                   id={it.slug}
