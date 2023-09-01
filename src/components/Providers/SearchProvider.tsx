@@ -47,7 +47,7 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
   }, [searchState.isShow])
   const hightLightQuery = useMemo(() => {
     return text.split(' ')
-  }, [text])
+  }, [result])
   const search = (s: string) => {
     if (text.length === 0) return
     setResult([])
