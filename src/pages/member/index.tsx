@@ -54,7 +54,7 @@ function GroupColumn({
       <Box
         className='opacity-0 delay-200 mt-96 duration-500  group-hover:block group-hover:opacity-100 group-hover:mt-4'
         height={'80%'}
-        overflowY={'scroll'}
+        overflowY={'auto'}
       >
         <Flex flexDir={'column'} gap={'.5rem'}>
           {members.map((val) => (
@@ -99,6 +99,10 @@ const MemberPage: React.FC<{
         <GroupColumn
           groupName='美术'
           members={members.filter((val) => val.role === 'ArtDesigner')}
+        />
+        <GroupColumn
+          groupName='划水'
+          members={members.filter((val) => val.role === 'User')}
         />
       </Flex>
     </Flex>
