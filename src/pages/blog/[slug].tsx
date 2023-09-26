@@ -66,10 +66,11 @@ const ArticleTools: FC<{
       pos={'fixed'}
       flexDir={'column'}
       gap={'1rem'}
+      left={'2rem'}
+      top={'4rem'}
       sx={{
         ...sx,
       }}
-      ref={flref}
     >
       <Tooltip label='编辑文章'>
         <IconButton
