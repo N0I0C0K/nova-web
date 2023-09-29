@@ -163,7 +163,9 @@ const ArticlePage: FC<{
         ) : null}
         <Flex gap={'.5rem'} alignItems={'center'}>
           <Flex flexDir={'column'}>
-            <Heading>{post.title}</Heading>
+            <Text fontSize={'2xl'} fontWeight={'bold'}>
+              {post.title}
+            </Text>
             <Text color={'gray'}>{post.synopsis}</Text>
             <Flex gap={'.5rem'} mt={'.5rem'}>
               {post.badges.map((val) => (
@@ -195,7 +197,11 @@ const ArticlePage: FC<{
             {post.content.content}
           </ReactMarkdown>
         </Box>
-        <ButtonGroup className='flex flex-row justify-center' isAttached>
+        <ButtonGroup
+          className='flex flex-row justify-center'
+          mt={'2rem'}
+          isAttached
+        >
           <Button
             aria-label='like'
             leftIcon={<ThumbsUpIcon />}

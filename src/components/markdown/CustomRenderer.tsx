@@ -60,8 +60,8 @@ export const defaults: Defaults = {
       <Text
         as={'strong'}
         sx={{
-          px: 1,
-          py: 0.5,
+          px: 1.5,
+          py: 0,
           rounded: 'md',
           _dark: {
             bgColor: 'orange.600',
@@ -97,7 +97,7 @@ export const defaults: Defaults = {
   },
   code: (props) => {
     const { inline, children, className, lang } = props
-    const match = /language-(\w+)/.exec(className || '')
+    const match = /language-(.*)/.exec(className || '')
     if (inline) {
       return (
         <Code px={2} py={1}>
@@ -110,7 +110,7 @@ export const defaults: Defaults = {
     return (
       <Box pos={'relative'} className='group'>
         <SyntaxHighlighter
-          language={'cpp'}
+          language={match?.[1].toLowerCase()}
           showLineNumbers
           style={mode.colorMode === 'dark' ? codedark : codelight}
           customStyle={{
@@ -141,7 +141,9 @@ export const defaults: Defaults = {
   hr: (props) => {
     return <Divider my={'1rem'} />
   },
-  a: (props) => <Link {...props} color='blue.400' />,
+  a: (props) => {
+    return <Link {...props} color='blue.400' />
+  },
   img: (props) => {
     return <Image {...props} rounded={'lg'}></Image>
   },
@@ -214,13 +216,14 @@ export const defaults: Defaults = {
   },
   heading: (props) => {
     const { level, children } = props
-    const sizes = ['2xl', 'xl', 'lg', 'md', 'sm', 'xs']
+    const sizes = ['2xl', 'xl', 'lg', 'md', 'sm', 'xs', 'xxs']
     return (
       <Heading
         mb={4}
+        mt={4}
         as={`h${level}`}
         size={sizes[`${level}`]}
-        className='hover:underline decoration-orange-200'
+        className='hover:underline decoration-orange-300'
         {...getCoreProps(props)}
       >
         {children}

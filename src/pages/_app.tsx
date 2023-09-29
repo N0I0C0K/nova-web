@@ -10,11 +10,23 @@ import { GlobalLayoutPropsProvider } from '@/components/LayoutPropsProvider'
 import { AlertProvider } from '@/components/Providers/AlertProvider'
 import { UserInfoProvider } from '@/components/Providers/UserProvider'
 import { SearchProvider } from '@/components/Providers/SearchProvider'
+import { NextPage } from 'next'
+import { ReactElement, ReactNode } from 'react'
+
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode
+}
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout
+}
 
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
-}: AppProps) {
+}: AppPropsWithLayout) {
+  const getLayout =
+    Component.getLayout ?? ((page) => <BaseLayout>{page}</BaseLayout>)
   return (
     <ChakraProvider>
       <SessionProvider session={session}>
@@ -24,9 +36,7 @@ export default function App({
               <AlertProvider>
                 <SearchProvider>
                   <UserInfoProvider>
-                    <BaseLayout>
-                      <Component {...pageProps} />
-                    </BaseLayout>
+                    {getLayout(<Component {...pageProps} />)}
                   </UserInfoProvider>
                 </SearchProvider>
               </AlertProvider>
